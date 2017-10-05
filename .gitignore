@@ -1,0 +1,16 @@
+# MATLAB
+*.asv
+
+# Latex
+*.synctex.gz
+*.aux
+*.log
+*.dvi
+*.auxlock
+*.md5
+*.run.xml
+*.blg
+*.bcf
+*.bbl
+*.dpth
+*-eps-converted-to.pdf
