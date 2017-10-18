@@ -8,6 +8,7 @@ addpath('init')
 
 % parameters
 trainPerc = .7;
+mat2vecFunc = @(x)max(x,[],2);
 
 % flags
 performFeatureExtraction = true;
@@ -16,10 +17,11 @@ performFeatureExtraction = true;
 if performFeatureExtraction
     % extract names and chords labels
     chordTable = getNameChordTable('wavs');
-    batchVec12 = extractBatchFeatures(names,featureType)
-    % should we save them? one per each feature type. computed only once and
-    % for all. if so, wrap in if
-    save('Save/init',{'chordTable','batchVec12'})
+    CLP_features = extractBatchFeatures(chordTable.Path,'CLP',mat2vecFunc);
+    CENS_features = extractBatchFeatures(chordTable.Path,'CENS',mat2vecFunc);
+    CRP_features = extractBatchFeatures(chordTable.Path,'CRP',mat2vecFunc);
+    
+    save('Save/init','chordTable','CLP_features','CENS_features','CRP_features')
 else
     load 'Save/init';
 end
@@ -33,14 +35,14 @@ testIdx = testIdx(randperm(length(testIdx)));
 
 %% training
 % train GMM and SVM once and save their objects containing settings
-trainedObj = trainModel(modelType,trainChords,trainVec12,name-value_pairs)
+trainedObj = trainModel(modelType,trainChords,trainVec12,name-value_pairs);
 % one per each model (gmm, svm), different features, different settings
 % save objects or load from previously trained
 
 %% template
-predChords = <init>
+predChords = zero(length(testIdx),1);
 
-for i = ...
+for i = 1:length(predChords)
         predChords(i) = templateDecision( batchVec12{i},templateType )
     % for each template type and feature type
 end
