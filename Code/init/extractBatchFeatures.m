@@ -28,7 +28,7 @@ Ntot = length(paths);
 batchVec12 = cell(Ntot,1);
 
 parfor i = 1:Ntot
-    fprintf('Processing file %4d/%4d\n',i,Ntot);
+    fprintf('Processing file (%s) %4d/%4d\n',featureType,i,Ntot);
     
     [f_audio,sideinfo] = wav_to_audio('', '', paths{i});
     shiftFB = estimateTuning(f_audio);

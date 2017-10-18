@@ -11,12 +11,13 @@ trainPerc = .7;
 mat2vecFunc = @(x)max(x,[],2);
 
 % flags
-performFeatureExtraction = true;
+performFeatureExtraction = false;
 
 % feature extraction
 if performFeatureExtraction
     % extract names and chords labels
     chordTable = getNameChordTable('wavs');
+    
     CLP_features = extractBatchFeatures(chordTable.Path,'CLP',mat2vecFunc);
     CENS_features = extractBatchFeatures(chordTable.Path,'CENS',mat2vecFunc);
     CRP_features = extractBatchFeatures(chordTable.Path,'CRP',mat2vecFunc);
