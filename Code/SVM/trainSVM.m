@@ -4,9 +4,6 @@ function mdl = trainSVM(X,Y,varargin)
 %   X (columns are features, rows are samples) and the categorical array Y
 %   containing the labels. It uses default parameters for TEMPLATESVM and
 %   FITCECOC, excluding:
-%   - 'Streams',RandStream('mrg32k3a')
-%   - 'UseParallel',1
-%   - 'UseSubstreams',true
 %   - 'Prior','uniform'
 % mdl = TRAINSVM(__,Name,Value) Adds Name-Value pairs to TEMPLATESVM and
 %   FITCECOC.
@@ -32,7 +29,7 @@ p.addParameter('Nu',[]);
 p.addParameter('OutlierFraction',[]);
 p.addParameter('Standardize',[]);
 p.addParameter('SaveSupportVectors',[]);
-p.addParameter('Verbose',[]);
+p.addParameter('Verbose',0);
 % fitcecoc
 p.addParameter('Coding',[]);
 p.addParameter('CrossVal',[]);
@@ -40,14 +37,15 @@ p.addParameter('CVPartition',[]);
 p.addParameter('Holdout',[]);
 p.addParameter('KFold',[]);
 p.addParameter('Leaveout',[]);
-p.addParameter('Streams',RandStream('mrg32k3a'));
-p.addParameter('UseParallel',1);
-p.addParameter('UseSubstreams',true);
+p.addParameter('Streams',[]);
+p.addParameter('UseParallel',[]);
+p.addParameter('UseSubstreams',[]);
 p.addParameter('Prior','uniform');
 
 p.parse(X,Y,varargin{:});
 
 %% init
+tic
 t = templateSVM('BoxConstraint',p.Results.BoxConstraint,...
     'ClipAlphas',p.Results.ClipAlphas,...
     'GapTolerance',p.Results.GapTolerance,...
@@ -74,4 +72,9 @@ mdl = fitcecoc(X,Y,...
                       'UseParallel',p.Results.UseParallel,...
                       'UseSubstreams',p.Results.UseSubstreams),...
     'Prior',p.Results.Prior);
+
+elapsed = toc;
+if p.Results.Verbose>=1
+    fprintf('Training time: %.3fs\n',elapsed);
+end
 end

@@ -4,7 +4,7 @@ clc
 
 %% init
 % paths
-addpath('init')
+addpath('init','Utilities','SVM')
 
 % parameters
 trainPerc = .7;
@@ -34,17 +34,24 @@ Ntot = size(chordTable,1);
 trainIdx = trainIdx(randperm(length(trainIdx)));
 testIdx = testIdx(randperm(length(testIdx)));
 
+trueTestLabels = chordTable.Chord(testIdx);
 %% training
-% train GMM and SVM once and save their objects containing settings
-trainedObj = trainModel(modelType,trainChords,trainVec12,name-value_pairs);
-% one per each model (gmm, svm), different features, different settings
-% save objects or load from previously trained
+
+disp 'Training SVM with CENS features...'
+mdlSvmCens = trainSVM( createDataMatrix(CENS_features(trainIdx)),...
+    chordTable.Chord(trainIdx) );
+disp 'Training SVM with CLP features...'
+mdlSvmClp = trainSVM( createDataMatrix(CLP_features(trainIdx)),...
+    chordTable.Chord(trainIdx) );
+disp 'Training SVM with CRP features...'
+mdlSvmCrp = trainSVM( createDataMatrix(CRP_features(trainIdx)),...
+    chordTable.Chord(trainIdx) );
 
 %% template
 predChords = zero(length(testIdx),1);
 
 for i = 1:length(predChords)
-        predChords(i) = templateDecision( batchVec12{i},templateType )
+    predChords(i) = templateDecision( batchVec12{i},templateType )
     % for each template type and feature type
 end
 
@@ -53,7 +60,13 @@ err = computeError(real,predicted)
 
 %% statistical methods (already trained)
 % fit models
+predSvmCens = mdlSvmCens.predict( createDataMatrix(CENS_features(testIdx)) );
+predSvmClp = mdlSvmClp.predict( createDataMatrix(CLP_features(testIdx)) );
+predSvmCrp = mdlSvmCrp.predict( createDataMatrix(CRP_features(testIdx)) );
 % compute errors
+errorSvmCens = computeError(trueTestLabels,predSvmCens);
+errorSvmClp = computeError(trueTestLabels,predSvmClp);
+errorSvmCrp = computeError(trueTestLabels,predSvmCrp);
 
 %% display/plot
 % grid on
