@@ -9,6 +9,7 @@ addpath('init','Utilities','SVM')
 % parameters
 trainPerc = .7;
 mat2vecFunc = @(x)max(x,[],2);
+kernel = 'polynomial';
 
 % flags
 performFeatureExtraction = false;
@@ -39,13 +40,13 @@ trueTestLabels = chordTable.Chord(testIdx);
 
 disp 'Training SVM with CENS features...'
 mdlSvmCens = trainSVM( createDataMatrix(CENS_features(trainIdx)),...
-    chordTable.Chord(trainIdx) );
+    chordTable.Chord(trainIdx), 'KernelFunction',kernel );
 disp 'Training SVM with CLP features...'
 mdlSvmClp = trainSVM( createDataMatrix(CLP_features(trainIdx)),...
-    chordTable.Chord(trainIdx) );
+    chordTable.Chord(trainIdx), 'KernelFunction',kernel );
 disp 'Training SVM with CRP features...'
 mdlSvmCrp = trainSVM( createDataMatrix(CRP_features(trainIdx)),...
-    chordTable.Chord(trainIdx) );
+    chordTable.Chord(trainIdx), 'KernelFunction',kernel );
 
 %% template
 predChords = zero(length(testIdx),1);
@@ -69,4 +70,8 @@ errorSvmClp = computeError(trueTestLabels,predSvmClp);
 errorSvmCrp = computeError(trueTestLabels,predSvmCrp);
 
 %% display/plot
+disp 'Error evaluation:'
+fprintf('SVM with CENS features error: %.2f%%\n',errorSvmCens*100);
+fprintf('SVM with CLP features error: %.2f%%\n',errorSvmClp*100);
+fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);
 % grid on
