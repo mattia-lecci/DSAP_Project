@@ -38,11 +38,14 @@ testIdx = testIdx(randperm(length(testIdx)));
 trueTestLabels = chordTable.Chord(testIdx);
 %% training
 
-disp 'Generating gaussian mixtures...'
+disp 'Generating CENS gaussian mixtures...'
+gaussianMixtureCENS = trainGaussianMixture(chordTable.Chord(trainIdx),CENS_features(trainIdx));
 
-gaussianMixtureCENS = trainGaussianMixture(chordTable,CENS_features);
-gaussianMixtureCLP = trainGaussianMixture(chordTable,CLP_features);
-gaussianMixtureCRP = trainGaussianMixture(chordTable,CRP_features);
+disp 'Generating CLP gaussian mixtures...'
+gaussianMixtureCLP = trainGaussianMixture(chordTable.Chord(trainIdx),CLP_features(trainIdx));
+
+disp 'Generating CRP gaussian mixtures...'
+gaussianMixtureCRP = trainGaussianMixture(chordTable.Chord(trainIdx),CRP_features(trainIdx));
 
 disp 'Training SVM with CENS features...'
 mdlSvmCens = trainSVM( createDataMatrix(CENS_features(trainIdx)),...
