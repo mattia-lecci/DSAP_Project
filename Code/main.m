@@ -36,16 +36,17 @@ trainIdx = trainIdx(randperm(length(trainIdx)));
 testIdx = testIdx(randperm(length(testIdx)));
 
 trueTestLabels = chordTable.Chord(testIdx);
-%% training
+%% training GAUSS
 
 disp 'Generating CENS gaussian mixtures...'
-gaussianMixtureCENS = trainGaussianMixture(chordTable.Chord(trainIdx),CENS_features(trainIdx));
-
+gaussianMixtureCENS = trainGaussianMixture(chordTable.Chord(trainIdx),createDataMatrix(CENS_features(trainIdx)));
 disp 'Generating CLP gaussian mixtures...'
-gaussianMixtureCLP = trainGaussianMixture(chordTable.Chord(trainIdx),CLP_features(trainIdx));
-
+gaussianMixtureCLP = trainGaussianMixture(chordTable.Chord(trainIdx),createDataMatrix(CLP_features(trainIdx)));
 disp 'Generating CRP gaussian mixtures...'
-gaussianMixtureCRP = trainGaussianMixture(chordTable.Chord(trainIdx),CRP_features(trainIdx));
+gaussianMixtureCRP = trainGaussianMixture(chordTable.Chord(trainIdx),createDataMatrix(CRP_features(trainIdx)));
+
+
+%% training SVM
 
 disp 'Training SVM with CENS features...'
 mdlSvmCens = trainSVM( createDataMatrix(CENS_features(trainIdx)),...
@@ -65,10 +66,24 @@ for i = 1:length(predChords)
     % for each template type and feature type
 end
 
-err = computeError(real,predicted)
+err = computeError(real,predicted);
 % for each predChords
 
 %% statistical methods (already trained)
+
+% fit gaussian
+
+predGaussCENS = gaussianPrediction(gaussianMixtureCENS,createDataMatrix(CENS_features(testIdx)));
+predGaussCLP = gaussianPrediction(gaussianMixtureCLP,createDataMatrix(CLP_features(testIdx)));
+predGaussCRP = gaussianPrediction(gaussianMixtureCRP,createDataMatrix(CRP_features(testIdx)));
+
+% compute errors
+errorGaussCens = computeError(trueTestLabels,predGaussCENS);
+errorGaussClp = computeError(trueTestLabels,predGaussCLP);
+errorGaussCrp = computeError(trueTestLabels,predGaussCRP);
+
+%%
+
 % fit models
 predSvmCens = mdlSvmCens.predict( createDataMatrix(CENS_features(testIdx)) );
 predSvmClp = mdlSvmClp.predict( createDataMatrix(CLP_features(testIdx)) );
@@ -79,7 +94,13 @@ errorSvmClp = computeError(trueTestLabels,predSvmClp);
 errorSvmCrp = computeError(trueTestLabels,predSvmCrp);
 
 %% display/plot
-disp 'Error evaluation:'
+
+disp 'Error evaluation with gaussian mixture:'
+fprintf('Gaussian with CENS features error: %.2f%%\n',errorGaussCens*100);
+fprintf('Gaussian with CLP features error: %.2f%%\n',errorGaussClp*100);
+fprintf('Gaussina with CRP features error: %.2f%%\n',errorGaussCrp*100);
+
+disp 'Error evaluation with SVM:'
 fprintf('SVM with CENS features error: %.2f%%\n',errorSvmCens*100);
 fprintf('SVM with CLP features error: %.2f%%\n',errorSvmClp*100);
 fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);

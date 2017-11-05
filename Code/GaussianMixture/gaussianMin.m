@@ -1,13 +1,6 @@
-function min = gaussianMin(obj, gaussMixture)
-
-    %Check if the input parameters are correct
+function min = gaussianMin(gaussMixture, obj)
     
-    p = inputParser;
-    p.addRequired('gaussMixture',@(x)validateattributes(x,{'cell'},{'size',[10,1]}));
-    p.addRequired('value',@(x) validateattributes(x,{'numeric'},{'size',[12,1]}));
-    p.parse(gaussdistribution, value);
-    
-    d_min = gaussianDistance(obj,gaussMixture(1,1));
+    d_min = gaussianDistance(gaussMixture{1}, obj);
     
     min = 'A';
     
@@ -16,8 +9,11 @@ function min = gaussianMin(obj, gaussMixture)
     chordlist = categorical(chordlist);
     
     for i=2:10 
-        d_new=gaussianDistance(obj,gaussMixture(i));
+        
+        d_new=gaussianDistance(gaussMixture{i}, obj);
+        
         if (d_new<d_min)
+            
             d_min=d_new;
             min=chordlist(i);
         end

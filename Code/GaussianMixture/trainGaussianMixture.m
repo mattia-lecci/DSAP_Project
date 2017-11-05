@@ -3,9 +3,8 @@
 
 function gaussianMixture = trainGaussianMixture(chord, features)
 
-    %I create a table which contain both the name of the notes and the
-    %features  
-    chordFeaturesTable = table(chord,features);
+    
+    chordFeaturesTable = table(chord, features);
     
     %This cell array is empty at the beginning
     
@@ -13,20 +12,19 @@ function gaussianMixture = trainGaussianMixture(chord, features)
     
     %I get the 10 different notes
     
-    cat = categories(chordFeaturesTable.chord);
+    chordlist = {'A';'Am';'Bm';'C';'D';'Dm';'E';'Em';'F';'G'};
     
     %I create a new gaussina for each new note and I save it the cell array
     %previously created
         
-    for i=1:(length(cat))
-        newnote = cat{i};
+    for i=1:(length(chordlist))
+        newnote = chordlist{i};
         
         cellnote = table2cell(chordFeaturesTable(chordFeaturesTable.chord==newnote,:));
+        
         cellnote = cellnote(:,2);
         
-        matrixnote = cell2mat(cellnote);
-        
-        data = reshape(matrixnote,length(matrixnote)/12,12);
+        data = cell2mat(cellnote);
         
         newgaussian = fitgmdist(data,1);
         
