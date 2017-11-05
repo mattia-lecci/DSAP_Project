@@ -4,7 +4,7 @@ clc
 
 %% init
 % paths
-addpath('init','Utilities','SVM')
+addpath('init','Utilities','SVM','GaussianMixture')
 
 % parameters
 trainPerc = .7;
@@ -37,6 +37,12 @@ testIdx = testIdx(randperm(length(testIdx)));
 
 trueTestLabels = chordTable.Chord(testIdx);
 %% training
+
+disp 'Generating gaussian mixtures...'
+
+gaussianMixtureCENS = trainGaussianMixture(chordTable,CENS_features);
+gaussianMixtureCLP = trainGaussianMixture(chordTable,CLP_features);
+gaussianMixtureCRP = trainGaussianMixture(chordTable,CRP_features);
 
 disp 'Training SVM with CENS features...'
 mdlSvmCens = trainSVM( createDataMatrix(CENS_features(trainIdx)),...
