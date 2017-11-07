@@ -1,0 +1,50 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=1cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.5cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Report}
+\author{Mattia Lecci, Federico Meson, Victor Cercos Llombart}
+
+\begin{document}
+\maketitle
+
+\section{Achievements and Changes}
+The project is following the established structure and milestones. The next step is to perform a first prototype test and weight the results. As of now we are not thinking about changing the original plan. As previously said, if we still have time after we properly finish the current single chord recognition algorithms, we might try to attack the full-song problem using the Hidden Markov Model approach.
+
+\section{Techniques}
+As planned we rely on \textit{Chroma toolbox} \cite{chroma_toolbox} to actualize the feature extraction. We decided to focus only on three kinds of features, specifically CENS, CLP and CRP. Given an audio file, assuming it only contains a single chord, we are able to build a (1x12) vector which describes the different chroma levels (A, A\#,..., G\#). Therefore different methods for chord recognition are applied.
+
+\subsection{Template-based Chord Recognition}
+The first method we describe is the \textit{template-based} method. \\
+We have chosen two different templates to be used: the Binary and the Harmonic. In the Binary Template the different Notes are described only with 1's and 0's. In the Harmonic Template the harmonics of each Note are also taken into account. We calculate the first 6 harmonics of each notes using the Emilia Gomez \cite{gomez2006tonal} proposed method. 
+Following the procedure we compute the binary and the harmonic template for each chord. In order to make a decision we use the cosine distance between the extracted feature vector and the template, choosing the minimum distance chord as a prediction.
+
+\subsection{Statistical Chord Recognition}
+
+In addition to the template-based method previously described we chose to realize two different statistical models.
+
+The first statistical model that we implemented is the \textit{Gaussian Mixture Model}. We perform a supervised training and we build up the different Gaussian distribution. Each of these Gaussian distribution is referred to a different chord. Given a testing chord we establish the probability that it belongs to a Gaussian distribution or another computing the so-called \textit{Mahalanobis distance}. We notice that Matlab provides methods to build the Gaussian Mixtures and also to compute the \textit{Mahalanobis distance}. We can improve the performance of this model using more training samples and therefore finding the best parameters for the Gaussian mixture.
+
+Another statistical method that we almost finished implementing is multiclass SVM using \textit{Error COrrecting Codes} (\textit{ECOC}). The pro of this approach is that Matlab already implements direct support for multiclass SVM through ECOC, thus most of the work is already done. What we are trying to do is adapting our data and problem to Matlab's implementation and trying to optimize both the ECOC and SVM parameters.
+
+\section{Experiments and results}
+We will use the \textit{Jim 2012 Chords} \cite{jim2012chords} dataset, containing over $2.000$ chords between minor and major triads with different musical instruments.
+
+Our idea is to compare the results between the different approaches (the template-based and the statistical-based methods) as well as between different features (CENS, CLP, CRP), in order to have a $4$ approaches by $3$ feature matrix. Also, SVM could produce more results since so many parameters can be modified (kernel in primis). We will also probably use use different statistical measures such as precision, recall and F-measure.
+
+\bibliographystyle{alpha}
+\bibliography{biblio}
+
+\end{document}
