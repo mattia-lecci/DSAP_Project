@@ -105,3 +105,12 @@ fprintf('SVM with CENS features error: %.2f%%\n',errorSvmCens*100);
 fprintf('SVM with CLP features error: %.2f%%\n',errorSvmClp*100);
 fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);
 % grid on
+
+%% try HMM
+addpath('hmm', 'beatles_dataset\Please please me');
+[song fs] = audioread('01 - I Saw Her Standing There.mp3');
+
+
+songl = songlabel(readtable('01_-_I_Saw_Her_Standing_There.lab.txt','Delimiter',' '));
+
+
