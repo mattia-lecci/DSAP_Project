@@ -1,4 +1,0 @@
-function songlabel(song)
-
-
-end

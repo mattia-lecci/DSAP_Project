@@ -107,10 +107,38 @@ fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);
 % grid on
 
 %% try HMM
-addpath('hmm', 'beatles_dataset\Please please me');
-[song fs] = audioread('01 - I Saw Her Standing There.mp3');
+addpath('hmm', 'beatles_dataset', 'MATLAB-Chroma-Toolbox_2.0');
 
+albums = {'Please please me'};
 
-songl = songlabel(readtable('01_-_I_Saw_Her_Standing_There.lab.txt','Delimiter',' '));
+j=0;
 
+for i=1:size(albums,2)
+    audioList =  dir(fullfile('beatles_dataset\',albums{i},'\*.mp3'));
+    audioSongNames = {audioList.name};
+    
+    %Nome della canzone + Vettore di Features + Numero di frame del vettore
+    
+    [albumFeatures, songLengths] = extractSongsFeatures('beatles_dataset\Please please me\',audioSongNames);
+    disp('Album features extraction finished!');
+    
+    %Extraction of the chord features of the songs of this album
+    
+    labelList =  dir(fullfile('beatles_dataset\',albums{i},'\*.txt'));
+    labelSongNames = {labelList.name};
+    
+    %Extraction of the chord label of the songs of this album
+    
+    albumLabels = extractSongsLabels('beatles_dataset\Please please me\',labelSongNames, songLengths);
+    disp('Album label extraction finished!');
+    
+    % I obtain a cell array in which in the first column I have the name of
+    % the song, in the secon the features per frame, in the third the chord
+    % label as the database said.
+    
+    discographyFeatures((j+1):(j+size(albumFeatures,1)),1:2)=albumFeatures;
+    discographyFeatures((j+1):(j+size(albumLabels,1)),3)=albumLabels(:,2);
+    
+    j=size(albumFeatures,1);
+end
 
