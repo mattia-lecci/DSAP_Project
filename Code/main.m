@@ -17,8 +17,8 @@ performFeatureExtraction = false;
 % feature extraction
 if performFeatureExtraction
     % extract names and chords labels
-    chordTable = getNameChordTable('wavs');
     
+    chordTable = getNameChordTable('wavs');
     CLP_features = extractBatchFeatures(chordTable.Path,'CLP',mat2vecFunc);
     CENS_features = extractBatchFeatures(chordTable.Path,'CENS',mat2vecFunc);
     CRP_features = extractBatchFeatures(chordTable.Path,'CRP',mat2vecFunc);
@@ -62,7 +62,7 @@ mdlSvmCrp = trainSVM( createDataMatrix(CRP_features(trainIdx)),...
 predChords = zero(length(testIdx),1);
 
 for i = 1:length(predChords)
-    predChords(i) = templateDecision( batchVec12{i},templateType )
+    predChords(i) = templateDecision( batchVec12{i},templateType );
     % for each template type and feature type
 end
 
@@ -117,7 +117,7 @@ for i=1:size(albums,2)
     audioList =  dir(fullfile('beatles_dataset\',albums{i},'\*.mp3'));
     audioSongNames = {audioList.name};
     
-    %Nome della canzone + Vettore di Features + Numero di frame del vettore
+    %I obtain a cell contained name of the song + features per song + number of frame per song
     
     [albumFeatures, songLengths] = extractSongsFeatures('beatles_dataset\Please please me\',audioSongNames);
     disp('Album features extraction finished!');
@@ -140,5 +140,6 @@ for i=1:size(albums,2)
     discographyFeatures((j+1):(j+size(albumLabels,1)),3)=albumLabels(:,2);
     
     j=size(albumFeatures,1);
+    
 end
 
