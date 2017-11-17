@@ -106,40 +106,70 @@ fprintf('SVM with CLP features error: %.2f%%\n',errorSvmClp*100);
 fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);
 % grid on
 
-%% try HMM
+%% HMM
 addpath('hmm', 'beatles_dataset', 'MATLAB-Chroma-Toolbox_2.0');
 
-albums = {'Please please me'};
+trainingAlbums = {'Please please me'};
+testAlbum = {};
 
 j=0;
 
-for i=1:size(albums,2)
-    audioList =  dir(fullfile('beatles_dataset\',albums{i},'\*.mp3'));
-    audioSongNames = {audioList.name};
+performFeatureExtractionHMM = true;
+
+if performFeatureExtractionHMM
+
+    for i=1:size(trainingAlbums,2)
+        audioList =  dir(fullfile('beatles_dataset\',trainingAlbums{i},'\*.mp3'));
+        audioSongNames = {audioList.name};
     
-    %I obtain a cell contained name of the song + features per song + number of frame per song
+        %I obtain a cell contained name of the song + features per song + number of frame per song
     
-    [albumFeatures, songLengths] = extractSongsFeatures('beatles_dataset\Please please me\',audioSongNames);
-    disp('Album features extraction finished!');
+        [albumFeatures, songLengths] = extractSongsFeatures('beatles_dataset\Please please me\',audioSongNames);
+        disp('Album features extraction finished!');
     
-    %Extraction of the chord features of the songs of this album
+        %Extraction of the chord features of the songs of this album. We
+        %notic ethat we focus on the CENS paramters, since we conclude that
+        %it was the best one
     
-    labelList =  dir(fullfile('beatles_dataset\',albums{i},'\*.txt'));
-    labelSongNames = {labelList.name};
+        labelList =  dir(fullfile('beatles_dataset\',trainingAlbums{i},'\*.txt'));
+        labelSongNames = {labelList.name};
     
-    %Extraction of the chord label of the songs of this album
+        %Extraction of the chord label of the songs of this album
     
-    albumLabels = extractSongsLabels('beatles_dataset\Please please me\',labelSongNames, songLengths);
-    disp('Album label extraction finished!');
+        albumLabels = extractSongsLabels('beatles_dataset\Please please me\',labelSongNames, songLengths);
+        disp('Album label extraction finished!');
     
-    % I obtain a cell array in which in the first column I have the name of
-    % the song, in the secon the features per frame, in the third the chord
-    % label as the database said.
+        % I obtain a cell array in which in the first column I have the name of
+        % the song, in the secon the features per frame, in the third the chord
+        % label as the database said.
     
-    discographyFeatures((j+1):(j+size(albumFeatures,1)),1:2)=albumFeatures;
-    discographyFeatures((j+1):(j+size(albumLabels,1)),3)=albumLabels(:,2);
+        discographyFeatures((j+1):(j+size(albumFeatures,1)),1:2)=albumFeatures;
+        discographyChords((j+1):(j+size(albumLabels,1)),1:2)=albumLabels;
     
-    j=size(albumFeatures,1);
+        j=j+size(albumLabels,1);
+        
+        save('Save/initHMM','discographyFeatures','discographyChords');
     
+    end
+    
+else
+    load 'Save/initHMM';
 end
 
+%% Training with SVM
+
+t = cell2table(albumLabels);
+
+disp 'Training SVM with CENS features...'
+mdlSvmCens = trainSVM( createDataMatrix(albumFeatures(:,2)),...
+    t.albumLabels2, 'KernelFunction',kernel );
+
+
+%% Prediction with SVM
+
+comparison = {size(discographyFeatures,1)};
+
+for i=1:size(discographyFeatures,1)
+    songFeatures = fliplr(rot90(fliplr(discographyFeatures{i,2})));
+    comparison{i}= table(mdlSvmCens.predict( songFeatures ),rot90(discographyFeatures{i,3}));
+end
