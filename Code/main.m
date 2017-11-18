@@ -158,18 +158,20 @@ end
 
 %% Training with SVM
 
-t = cell2table(albumLabels);
+discographyFeaturesCell = discographyFeatures(:,2);
+discographyChordsTable = cell2table(discographyChords);
+
+[index, ~] = find(discographyChordsTable.discographyChords2 ~= 'N');
 
 disp 'Training SVM with CENS features...'
-mdlSvmCens = trainSVM( createDataMatrix(albumFeatures(:,2)),...
-    t.albumLabels2, 'KernelFunction',kernel );
+mdlSvmCens = trainSVM( createDataMatrix(discographyFeaturesCell(index)),...
+    discographyChordsTable.discographyChords2(index), 'KernelFunction',kernel );
 
 
 %% Prediction with SVM
 
-comparison = {size(discographyFeatures,1)};
+trueTestLabels = discographyChordsTable.discographyChords2(index);
 
-for i=1:size(discographyFeatures,1)
-    songFeatures = fliplr(rot90(fliplr(discographyFeatures{i,2})));
-    comparison{i}= table(mdlSvmCens.predict( songFeatures ),rot90(discographyFeatures{i,3}));
-end
+predSvmCens = mdlSvmCens.predict( createDataMatrix(discographyFeaturesCell(index)) );
+
+errorSvmCens = computeError(trueTestLabels,predSvmCens);
