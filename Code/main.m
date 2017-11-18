@@ -106,10 +106,13 @@ fprintf('SVM with CLP features error: %.2f%%\n',errorSvmClp*100);
 fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);
 % grid on
 
-%% HMM
+
+%% HIDDEN MARKOV MODEL
+
+%% init
 addpath('hmm', 'beatles_dataset', 'MATLAB-Chroma-Toolbox_2.0');
 
-trainingAlbums = {'Please please me'};
+trainingAlbums = {'Please please me' 'With The Beatles'};
 testAlbum = {};
 
 j=0;
@@ -124,7 +127,7 @@ if performFeatureExtractionHMM
     
         %I obtain a cell contained name of the song + features per song + number of frame per song
     
-        [albumFeatures, songLengths] = extractSongsFeatures('beatles_dataset\Please please me\',audioSongNames);
+        [albumFeatures, songLengths] = extractSongsFeatures(fullfile('beatles_dataset\',trainingAlbums{i},'\'),audioSongNames);
         disp('Album features extraction finished!');
     
         %Extraction of the chord features of the songs of this album. We
@@ -136,19 +139,19 @@ if performFeatureExtractionHMM
     
         %Extraction of the chord label of the songs of this album
     
-        albumLabels = extractSongsLabels('beatles_dataset\Please please me\',labelSongNames, songLengths);
+        albumLabels = extractSongsLabels(fullfile('beatles_dataset\',trainingAlbums{i},'\'),labelSongNames, songLengths);
         disp('Album label extraction finished!');
     
         % I obtain a cell array in which in the first column I have the name of
         % the song, in the secon the features per frame, in the third the chord
         % label as the database said.
     
-        discographyFeatures((j+1):(j+size(albumFeatures,1)),1:2)=albumFeatures;
-        discographyChords((j+1):(j+size(albumLabels,1)),1:2)=albumLabels;
+        trainDiscographyFeatures((j+1):(j+size(albumFeatures,1)),1:2)=albumFeatures;
+        trainDiscographyChords((j+1):(j+size(albumLabels,1)),1:2)=albumLabels;
     
         j=j+size(albumLabels,1);
         
-        save('Save/initHMM','discographyFeatures','discographyChords');
+        save('Save/initHMM','trainDiscographyFeatures','trainDiscographyChords');
     
     end
     
@@ -158,20 +161,99 @@ end
 
 %% Training with SVM
 
-discographyFeaturesCell = discographyFeatures(:,2);
-discographyChordsTable = cell2table(discographyChords);
+kernel = 'polynomial';
 
-[index, ~] = find(discographyChordsTable.discographyChords2 ~= 'N');
+trainDiscographyFeatures = trainDiscographyFeatures(:,2);
+trainDiscographyChordsTable = cell2table(trainDiscographyChords);
+
+[rightIndex, ~] = find(trainDiscographyChordsTable.trainDiscographyChords2 ~= 'N');
+
+trainDiscographyFeatures = trainDiscographyFeatures(rightIndex);
+trainDiscographyChordsTable = cell2table(trainDiscographyChords(rightIndex,:));
+
 
 disp 'Training SVM with CENS features...'
-mdlSvmCens = trainSVM( createDataMatrix(discographyFeaturesCell(index)),...
-    discographyChordsTable.discographyChords2(index), 'KernelFunction',kernel );
+mdlSvmCens = trainSVM( createDataMatrix(trainDiscographyFeatures),...
+    trainDiscographyChordsTable.Var2, 'KernelFunction',kernel );
 
 
-%% Prediction with SVM
+%% Computing emission probabiities
 
-trueTestLabels = discographyChordsTable.discographyChords2(index);
+trueTestLabels = removecats( trainDiscographyChordsTable.Var2);
 
-predSvmCens = mdlSvmCens.predict( createDataMatrix(discographyFeaturesCell(index)) );
+predSvmCens = mdlSvmCens.predict( createDataMatrix(trainDiscographyFeatures));
 
-errorSvmCens = computeError(trueTestLabels,predSvmCens);
+listTrueChords = categories(trueTestLabels);
+
+% Matrix numChord x numChord
+% p(i,j) = Prob(J|I)
+
+emissionProb = zeros(size((listTrueChords),1),size((listTrueChords),1));
+
+disp 'Computing emission probability...'
+
+for i = 1:size(listTrueChords)
+   
+    [trueChordIndex, ~] = find( trueTestLabels == listTrueChords(i));
+    
+    for j = 1:size(listTrueChords)
+        
+        [predChordIndex, ~] = find(predSvmCens(trueChordIndex)==listTrueChords(j));
+    
+        emissionProb(i,j) = size(predChordIndex)/size(trueChordIndex);
+    end
+end
+
+
+%% Computing transition probabilities
+
+trainDiscographyAlbum = categorical(trainDiscographyChordsTable.Var1);
+
+listSong = categories(trainDiscographyAlbum);
+
+transProb = zeros(size((listTrueChords),1),size((listTrueChords),1));
+
+disp 'Computing transition probabilities';
+
+for i = 1:size(listSong)
+    
+    newsong = listSong(i);
+    
+    indexSong = find(trainDiscographyAlbum == newsong); 
+    
+    songLabel = trueTestLabels(indexSong);
+    
+    for k = 1:size(listTrueChords)
+   
+        [indexChordStart, ~] = find( songLabel == listTrueChords(k));
+    
+        for j = 1:size(indexChordStart)
+            
+            indexFrom = indexChordStart(j);
+            
+            indexTo = indexChordStart(j)+1;
+            
+            if (indexTo<size(songLabel,1)) & (songLabel(indexFrom)~=songLabel(indexTo))
+                
+                y = find(listTrueChords==songLabel(indexTo));
+                
+                transProb(k,y) = transProb(k,y)+1;
+            
+            end
+        end
+    end    
+end
+
+%Normalize the probabilities
+
+for i =1:size(transProb,1)
+    
+    S = sum(transProb(i,:));
+    
+    if S ~= 0
+        transProb(i,1:size(transProb,1))=transProb(i,1:size(transProb,1))/S;
+    end
+end
+
+
+
