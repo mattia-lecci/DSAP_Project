@@ -19,9 +19,24 @@ function songLabels = extractSongsLabels(path, names, numberFrame)
         while time<songDuration
             while time <table{k,2}
                 s = table{k,3};
-                s =strsplit(s{1},':');
+                s =strsplit(s{1},{':','/'});
                 
-                labels(w) = categorical(s(1));
+                ls = size(s,2);
+                
+                if strcmp(s(1),'Ab')
+                    if ls<2
+                        labels(w) = categorical(cellstr('G#'));
+                    else
+                        labels(w) = categorical(strcat('G#',':','min'));
+                    end
+                else
+                
+                    if ls<2
+                        labels(w) = categorical(s(1));
+                    else
+                        labels(w) = categorical(strcat(s(1),':','min'));
+                    end
+                end
                 
                 time = time + frameDuration;
                 w=w+1;
