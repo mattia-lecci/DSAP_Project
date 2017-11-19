@@ -110,10 +110,11 @@ fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);
 %% HIDDEN MARKOV MODEL
 
 %% init
+
 addpath('init','Utilities','SVM','GaussianMixture')
 addpath('hmm', 'beatles_dataset', 'MATLAB-Chroma-Toolbox_2.0');
 
-trainingAlbums = {'Please please me' 'With The Beatles'};
+trainingAlbums = {'Test'};
 testingAlbums = { 'Test' };
 
 j1=0;
@@ -153,16 +154,39 @@ if performTrainFeatureExtractionHMM
         trainDiscographyChords((j1+1):(j1+size(albumLabels,1)),1:2)=albumLabels;
     
         j1=j1+size(albumLabels,1);
-        
-        save('Save/initTrainHMM','trainDiscographyFeatures','trainDiscographyChords');
     
     end
     
+    disp 'Saving train data...'
+    
+    trainDiscographyFeatures = trainDiscographyFeatures(:,2);
+    trainDiscographyChords = cell2table(trainDiscographyChords);
+    
+    [rightIndex, ~] = find(trainDiscographyChords.trainDiscographyChords2 ~= 'N');
+
+    trainDiscographyFeatures = trainDiscographyFeatures(rightIndex);
+    trainDiscographyChords = trainDiscographyChords(rightIndex,:);
+    
+    trainDiscographyChords.trainDiscographyChords2 = removecats(trainDiscographyChords.trainDiscographyChords2);
+        
+    true_trainChordsList = trainDiscographyChords.trainDiscographyChords2;
+    
+    trainSongsList = categorical(trainDiscographyChords.trainDiscographyChords1);
+    
+   	trainSongs = categories(trainSongsList);
+    
+    chords = categories(true_trainChordsList);
+    
+    save('Save/initTrainHMM','trainDiscographyFeatures','trainDiscographyChords', 'chords', 'true_trainChordsList', 'trainSongs', 'trainSongsList');
+    
 else
+    
+    disp 'Loading train data...'
+    
     load 'Save/initTrainHMM';
 end
 
-performTestFeatureExtractionHMM = true;
+performTestFeatureExtractionHMM = false;
 
 if performTestFeatureExtractionHMM
 
@@ -195,34 +219,35 @@ if performTestFeatureExtractionHMM
         testDiscographyChords((j2+1):(j2+size(albumLabels,1)),1:2)=albumLabels;
     
         j2=j2+size(albumLabels,1);
-        
-        save('Save/initTestHMM','testDiscographyFeatures','testDiscographyChords');
     
     end
     
+    disp 'Saving test data...'
+
+    testDiscographyFeatures = testDiscographyFeatures(:,2);
+    testDiscographyChords = cell2table(testDiscographyChords);
+
+    [rightIndex, ~] = find(testDiscographyChords.testDiscographyChords2 ~= 'N');
+
+    testDiscographyFeatures = testDiscographyFeatures(rightIndex);
+    testDiscographyChords = testDiscographyChords(rightIndex,:);
+    
+    testDiscographyChords.testDiscographyChords2 = removecats(testDiscographyChords.testDiscographyChords2);
+        
+    true_testChordsList = testDiscographyChords.testDiscographyChords2;
+    
+    testSongsList = categorical(testDiscographyChords.testDiscographyChords1);
+    
+   	testSongs = categories(testSongsList);
+    
+    save('Save/initTestHMM','testDiscographyFeatures','testDiscographyChords','true_testChordsList', 'testSongs', 'testSongsList');
+    
 else
+    
+    disp 'Loading test data..'
+    
     load 'Save/initTestHMM';
 end
-
-%% Preworking training
-
-trainDiscographyFeatures = trainDiscographyFeatures(:,2);
-trainDiscographyChordsTable = cell2table(trainDiscographyChords);
-
-[rightIndex, ~] = find(trainDiscographyChordsTable.trainDiscographyChords2 ~= 'N');
-
-trainDiscographyFeatures = trainDiscographyFeatures(rightIndex);
-trainDiscographyChordsTable = cell2table(trainDiscographyChords(rightIndex,:));
-
-%% Preworking testing
-
-testDiscographyFeatures = testDiscographyFeatures(:,2);
-testDiscographyChordsTable = cell2table(testDiscographyChords);
-
-[rightIndex, ~] = find(testDiscographyChordsTable.testDiscographyChords2 ~= 'N');
-
-testDiscographyFeatures = testDiscographyFeatures(rightIndex);
-testDiscographyChordsTable = cell2table(testDiscographyChords(rightIndex,:));
 
 
 %% Training with SVM
@@ -231,166 +256,73 @@ kernel = 'polynomial';
 
 disp 'Training SVM with CENS features...'
 mdlSvmCens = trainSVM( createDataMatrix(trainDiscographyFeatures),...
-    trainDiscographyChordsTable.Var2, 'KernelFunction',kernel );
+    true_trainChordsList, 'KernelFunction',kernel );
 
 
-%% Computing emission probabiities
+%% Predict with SVM
 
-trueTestLabels = removecats( trainDiscographyChordsTable.Var2);
+disp 'Testing SVM with CENS features...'
 
-predSvmCens = mdlSvmCens.predict( createDataMatrix(trainDiscographyFeatures));
+pred_trainChordList = mdlSvmCens.predict( createDataMatrix(trainDiscographyFeatures));
 
-listTrueChords = categories(trueTestLabels);
+%% Computation emission probabilities
 
 % Matrix numChord x numChord
 % p(i,j) = Prob(J|I)
 
-emissionProb = zeros(size((listTrueChords),1),size((listTrueChords),1));
+disp 'Computing emission probabilities...'
 
-disp 'Computing emission probability...'
-
-for i = 1:size(listTrueChords)
-   
-    [trueChordIndex, ~] = find( trueTestLabels == listTrueChords(i));
-    
-    for j = 1:size(listTrueChords)
-        
-        [predChordIndex, ~] = find(predSvmCens(trueChordIndex)==listTrueChords(j));
-    
-        emissionProb(i,j) = size(predChordIndex)/size(trueChordIndex);
-    end
-end
+emProb = get_emProb(chords, true_trainChordsList, pred_trainChordList);
 
 
 %% Computing transition probabilities
 
-trainDiscographyAlbum = categorical(trainDiscographyChordsTable.Var1);
+disp 'Computing transition probabilities...';
 
-listSong = categories(trainDiscographyAlbum);
-
-transProb = zeros(size((listTrueChords),1),size((listTrueChords),1));
-
-disp 'Computing transition probabilities';
-
-for i = 1:size(listSong)
-    
-    newsong = listSong(i);
-    
-    indexSong = trainDiscographyAlbum == newsong; 
-    
-    songLabel = trueTestLabels(indexSong);
-    
-    for k = 1:size(listTrueChords,1)
-   
-        [indexChordStart, ~] = find( songLabel == listTrueChords(k));
-    
-        for j = 1:size(indexChordStart)
-            
-            indexFrom = indexChordStart(j);
-            
-            indexTo = indexChordStart(j)+1;
-            
-            if (indexTo<size(songLabel,1))
-                
-                y = find(listTrueChords==songLabel(indexTo));
-                
-                transProb(k,y) = transProb(k,y)+1;
-            
-            end
-        end
-    end    
-end
-
-%Normalize the probabilities
-
-for i =1:size(transProb,1)
-    
-    S = sum(transProb(i,:));
-    
-    if S ~= 0
-        transProb(i,1:size(transProb,1))=transProb(i,1:size(transProb,1))/S;
-    end
-end
+transProb = get_transProb(chords, trainSongs, true_trainChordsList, trainSongsList );
 
 
 %% Computing start probabilities
 
-trainDiscographyAlbum = categorical(trainDiscographyChordsTable.Var1);
 
-listSong = categories(trainDiscographyAlbum);
+disp 'Computing starting probabilities....';
 
-startProb = zeros(1,size((listTrueChords),1));
+startProb = get_startProb(chords, trainSongs, true_trainChordsList, trainSongsList );
 
-disp 'Computing starting probabilities';
-
-
-for i = 1:size(listSong)
-    
-    newsong = listSong(i);
-    
-    indexSong = trainDiscographyAlbum == newsong; 
-    
-    songLabel = trueTestLabels(indexSong);
-    
-    for k = 1:size(listTrueChords)
-   
-        if songLabel(1)==listTrueChords(k)
-            
-            startProb(1,k)=startProb(1,k)+1;
-        end
-            
-    end    
-end
-
-%Normalize the probabilities
-
-S = sum(startProb(1,:));
-    
-if S ~= 0
-    startProb(1,1:size(startProb,2))=startProb(1,1:size(transProb,2))/S;
-end
     
 
 %% TESTING
 
-testDiscographyAlbum = categorical(testDiscographyChordsTable.Var1);
+testError_HMM = zeros(1,size(testSongs,2));
 
-listSong = categories(testDiscographyAlbum);
-
-song = listSong(1);
-
-indexSong = find(testDiscographyAlbum == song); 
+for i=1:size(testSongs)
     
-songLabel = trueTestLabels(indexSong);
-
-observations = mdlSvmCens.predict( createDataMatrix(testDiscographyFeatures(indexSong)));
-
-obs = zeros(1,size(observations,1));
-
-for i=1:size(listTrueChords)
+    song = testSongs(i);
     
-    [index, ~] = find(observations==listTrueChords(i));
+    indexSong = find(testSongsList == song);
     
-    obs(index)=i;
+    obs = mdlSvmCens.predict( createDataMatrix(testDiscographyFeatures(indexSong)));
     
+    numeric_obs = zeros(1,size(obs,1));
+    
+    for j=1:size(chords)
+    
+        [indexChords, ~] = find(obs==chords(j));
+    
+        numeric_obs(indexChords)=j;
+    
+    end    
+
+    states = rot90(chords);
+
+    [total, argmax, valmax] = forward_viterbi(numeric_obs,states,startProb,transProb,emProb);
+    
+    argmax = argmax(2:size(argmax,2));
+    
+
+    testError_HMM(i) = computeError(true_testChordsList(indexSong),categorical(argmax));
+
 end
-
-states = rot90(listTrueChords);
-
-start_p = startProb;
-
-trans_p = transProb;
-
-emit_p = emissionProb;
-
-[total, argmax, valmax] = forward_viterbi(obs,states,start_p,trans_p,emit_p);
- 
-
-%%
-
-argmax = argmax(2:size(argmax,2));
-
-errorHMMSvmCens = computeError(trueTestLabels(indexSong),categorical(argmax));
 
 
 
