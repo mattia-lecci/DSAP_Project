@@ -123,7 +123,7 @@ j1=0;
 
 j2=0;
 
-performTrainFeatureExtractionHMM = true;
+performTrainFeatureExtractionHMM = false;
 
 if performTrainFeatureExtractionHMM
 
@@ -188,7 +188,7 @@ else
     load 'Save/initTrainHMM';
 end
 
-performTestFeatureExtractionHMM = true;
+performTestFeatureExtractionHMM = false;
 
 if performTestFeatureExtractionHMM
 
@@ -295,7 +295,7 @@ startProb = get_startProb(chords, trainSongs, true_trainChordsList, trainSongsLi
 
 %% TESTING
 
-testError_HMM = zeros(1,size(testSongs,2));
+error_HMM = zeros(2,size(testSongs,2));
 
 for i=1:size(testSongs)
     
@@ -319,11 +319,12 @@ for i=1:size(testSongs)
 
     [total, argmax, valmax] = forward_viterbi(numeric_obs,states,startProb,transProb,emProb);
     
-    argmax = argmax(2:size(argmax,2));
+    argmax = argmax(1:(size(argmax,2)-1));
     
 
-    testError_HMM(i) = computeError(true_testChordsList(indexSong),categorical(argmax));
-
+    error_HMM(1,i) = computeError(true_testChordsList(indexSong),categorical(argmax));
+    error_HMM(2,i) = computeError(true_testChordsList(indexSong),obs);
+    
 end
 
 
