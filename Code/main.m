@@ -111,6 +111,8 @@ fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);
 
 %% init
 
+clear all
+
 addpath('init','Utilities','SVM','GaussianMixture')
 addpath('hmm', 'beatles_dataset', 'MATLAB-Chroma-Toolbox_2.0');
 
@@ -186,7 +188,7 @@ else
     load 'Save/initTrainHMM';
 end
 
-performTestFeatureExtractionHMM = false;
+performTestFeatureExtractionHMM = true;
 
 if performTestFeatureExtractionHMM
 
