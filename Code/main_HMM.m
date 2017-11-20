@@ -80,7 +80,7 @@ else
     load 'Save/initTrainHMM';
 end
 
-performTestFeatureExtractionHMM = true;
+performTestFeatureExtractionHMM = false;
 
 if performTestFeatureExtractionHMM
 
@@ -195,9 +195,11 @@ disp 'Computing performance...'
 %The first row of the vector shows error with HMM system, the second row
 %without HMM system
 
-error_HMM = zeros(2,size(testSongs,2));
+errors = zeros(2,size(testSongs,2));
 
-for i=1:size(testSongs)
+states = rot90(chords);
+
+for i=1:size(testSongs,2)
     
     song = testSongs(i);
     
@@ -215,19 +217,19 @@ for i=1:size(testSongs)
     
     end    
 
-    states = rot90(chords);
-
     [total, argmax, valmax] = forward_viterbi(numeric_obs,states,startProb,transProb,emProb);
     
     argmax = argmax(1:(size(argmax,2)-1));
     
-
-    error_HMM(1,i) = computeError(true_testChordsList(indexSong),categorical(argmax));
-    error_HMM(2,i) = computeError(true_testChordsList(indexSong),obs);
+    errors(1,i) = computeError(true_testChordsList(indexSong),categorical(argmax));
+    
+    errors(2,i) = computeError(true_testChordsList(indexSong),obs);
     
 end
 
+hmm_error = mean(errors(1,:));
+basic_error = mean(errors(2,:));
 
 
-
-
+disp 'Error without HMM: '; disp(basic_error);
+disp 'Error with HMM: '; disp(hmm_error);
