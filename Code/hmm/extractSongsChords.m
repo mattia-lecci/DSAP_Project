@@ -1,4 +1,4 @@
-function songLabels = extractSongsLabels(path, names, numberFrame)
+function songLabels = extractSongsChords(path, names, numberFrame)
 
     songLabels = {size(names,2),2};
     
@@ -48,7 +48,7 @@ function songLabels = extractSongsLabels(path, names, numberFrame)
                 
                 % Comment the following row to reduce chord type
                 
-                labels(w) = categorical(table{k,3});
+                % labels(w) = categorical(table{k,3});
                 
                 time = time + frameDuration;
                 w=w+1;

@@ -116,7 +116,7 @@ clear all
 addpath('init','Utilities','SVM','GaussianMixture')
 addpath('hmm', 'beatles_dataset', 'MATLAB-Chroma-Toolbox_2.0');
 
-trainingAlbums = {'Test'};
+trainingAlbums = {'Please please me' 'With The Beatles'};
 testingAlbums = { 'Test' };
 
 j1=0;
@@ -145,7 +145,7 @@ if performTrainFeatureExtractionHMM
     
         %Extraction of the chord label of the songs of this album
     
-        albumLabels = extractSongsLabels(fullfile('beatles_dataset\',trainingAlbums{i},'\'),labelSongNames, songLengths);
+        albumLabels = extractSongsChords(fullfile('beatles_dataset\',trainingAlbums{i},'\'),labelSongNames, songLengths);
         disp('Album label extraction finished!');
     
         % I obtain a cell array in which in the first column I have the name of
@@ -188,7 +188,7 @@ else
     load 'Save/initTrainHMM';
 end
 
-performTestFeatureExtractionHMM = false;
+performTestFeatureExtractionHMM = true;
 
 if performTestFeatureExtractionHMM
 
@@ -210,7 +210,7 @@ if performTestFeatureExtractionHMM
     
         %Extraction of the chord label of the songs of this album
     
-        albumLabels = extractSongsLabels(fullfile('beatles_dataset\',testingAlbums{i},'\'),labelSongNames, songLengths);
+        albumLabels = extractSongsChords(fullfile('beatles_dataset\',testingAlbums{i},'\'),labelSongNames, songLengths);
         disp('Album label extraction finished!');
     
         % I obtain a cell array in which in the first column I have the name of
@@ -269,10 +269,9 @@ pred_trainChordList = mdlSvmCens.predict( createDataMatrix(trainDiscographyFeatu
 
 %% Computation emission probabilities
 
-% Matrix numChord x numChord
-% p(i,j) = Prob(J|I)
-
 disp 'Computing emission probabilities...'
+
+% Matrix numChord*numChord
 
 emProb = get_emProb(chords, true_trainChordsList, pred_trainChordList);
 
@@ -280,6 +279,8 @@ emProb = get_emProb(chords, true_trainChordsList, pred_trainChordList);
 %% Computing transition probabilities
 
 disp 'Computing transition probabilities...';
+
+% Matrix numChord*numChord
 
 transProb = get_transProb(chords, trainSongs, true_trainChordsList, trainSongsList );
 
@@ -289,11 +290,18 @@ transProb = get_transProb(chords, trainSongs, true_trainChordsList, trainSongsLi
 
 disp 'Computing starting probabilities....';
 
+% Row with lenght equal to the chord number
+
 startProb = get_startProb(chords, trainSongs, true_trainChordsList, trainSongsList );
 
     
 
 %% TESTING
+
+disp 'Computing performance...'
+
+%The first row of the vector shows error with HMM system, the second row
+%without HMM system
 
 error_HMM = zeros(2,size(testSongs,2));
 
