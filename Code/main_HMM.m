@@ -5,9 +5,7 @@ clear all
 %% init
 
 addpath('init','Utilities','SVM','GaussianMixture')
-addpath('hmm', 'beatles_dataset', 'MATLAB-Chroma-Toolbox_2.0');
-addpath('C:\Users\Federico\OneDrive - Università degli Studi di Padova\Ingegneria delle telecomunicazioni\UPC\Digital Speech & Audio Processing\Project\MATLAB-Chroma-Toolbox_2.0');
-
+addpath('hmm', 'beatles_dataset');
 trainingAlbums = {'Please please me' 'With The Beatles'};
 testingAlbums = { 'Help' };
 
