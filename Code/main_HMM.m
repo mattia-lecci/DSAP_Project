@@ -144,7 +144,7 @@ end
 
 %% Training with SVM
 
-kernel = 'polynomial';
+kernel = 'rbf';
 
 disp 'Training SVM with CENS features...'
 mdlSvmCens = trainSVM( createDataMatrix(trainDiscographyFeatures),...
@@ -193,11 +193,11 @@ disp 'Computing performance...'
 %The first row of the vector shows error with HMM system, the second row
 %without HMM system
 
-errors = zeros(2,size(testSongs,2));
+errors = zeros(2,size(testSongs,1));
 
 states = rot90(chords);
 
-for i=1:size(testSongs,2)
+for i=1:size(testSongs,1)
     
     song = testSongs(i);
     

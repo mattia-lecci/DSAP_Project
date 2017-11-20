@@ -1,6 +1,6 @@
 function transProb = get_transProb(chords, songs, chordList, songsList )
 
-    transProb = zeros(size((chords),1),size((chords),1));
+    transProb = ones(size((chords),1),size((chords),1))*1e-4;
 
     for i = 1:size(songs)
     
