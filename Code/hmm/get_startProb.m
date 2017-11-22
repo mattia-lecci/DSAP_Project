@@ -1,6 +1,6 @@
 function startProb = get_startProb(chords, songs, chordsList, songsList)
 
-    startProb = zeros(1,size((chords),1));
+    startProb = ones(1,size((chords),1))*1e-4;
 
 
     for i = 1:size(songs)

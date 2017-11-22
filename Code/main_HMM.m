@@ -144,7 +144,7 @@ end
 
 %% Training with SVM
 
-kernel = 'polynomial';
+kernel = 'rbf';
 
 disp 'Training SVM with CENS features...'
 mdlSvmCens = trainSVM( createDataMatrix(trainDiscographyFeatures),...
@@ -197,7 +197,11 @@ errors = zeros(2,size(testSongs,1));
 
 states = rot90(chords);
 
+<<<<<<< HEAD
 for i=1:13
+=======
+for i=1:size(testSongs,1)
+>>>>>>> 09326032085d06627dc118af03213d2686b16eda
     
     song = testSongs(i);
     

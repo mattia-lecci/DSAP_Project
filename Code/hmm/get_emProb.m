@@ -1,6 +1,6 @@
 function emProb = get_emProb(chords, trueChordsList, predChordList)
     
-    emProb = zeros(size((chords),1),size((chords),1));
+    emProb = ones(size((chords),1),size((chords),1))*1e-4;
 
     for i = 1:size(chords)
    
