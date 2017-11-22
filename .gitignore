@@ -15,4 +15,8 @@
 *.dpth
 *-eps-converted-to.pdf
 
+<<<<<<< HEAD
 Code\beatles_dataset
+=======
+Code/beatles_dataset
+>>>>>>> ff7c16367afc0b2644cfdfdc02febdc9ad07c532
