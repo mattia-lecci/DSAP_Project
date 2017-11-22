@@ -1,19 +1,19 @@
 %% HIDDEN MARKOV MODEL
-
+close all
 clear all
 
 %% init
 
 addpath('init','Utilities','SVM','GaussianMixture')
 addpath('hmm', 'beatles_dataset');
-trainingAlbums = {'Please please me' 'With The Beatles'};
-testingAlbums = { 'Help' };
+trainingAlbums = {'Train'};
+testingAlbums = { 'Test' };
 
 j1=0;
 
 j2=0;
 
-performTrainFeatureExtractionHMM = false;
+performTrainFeatureExtractionHMM = true;
 
 if performTrainFeatureExtractionHMM
 
@@ -69,16 +69,16 @@ if performTrainFeatureExtractionHMM
     
     chords = categories(true_trainChordsList);
     
-    save('Save/initTrainHMM','trainDiscographyFeatures','trainDiscographyChords', 'chords', 'true_trainChordsList', 'trainSongs', 'trainSongsList');
+    save('Save/initTrainHMM1','trainDiscographyFeatures','trainDiscographyChords', 'chords', 'true_trainChordsList', 'trainSongs', 'trainSongsList');
     
 else
     
     disp 'Loading train data...'
     
-    load 'Save/initTrainHMM';
+    load 'Save/initTrainHMM1';
 end
 
-performTestFeatureExtractionHMM = false;
+performTestFeatureExtractionHMM = true;
 
 if performTestFeatureExtractionHMM
 
@@ -132,13 +132,13 @@ if performTestFeatureExtractionHMM
     
    	testSongs = categories(testSongsList);
     
-    save('Save/initTestHMM','testDiscographyFeatures','testDiscographyChords','true_testChordsList', 'testSongs', 'testSongsList');
+    save('Save/initTestHMM1','testDiscographyFeatures','testDiscographyChords','true_testChordsList', 'testSongs', 'testSongsList');
     
 else
     
     disp 'Loading test data..'
     
-    load 'Save/initTestHMM';
+    load 'Save/initTestHMM1';
 end
 
 
@@ -197,12 +197,7 @@ errors = zeros(2,size(testSongs,1));
 
 states = rot90(chords);
 
-<<<<<<< HEAD
-for i=1:13
-=======
 for i=1:size(testSongs,1)
->>>>>>> 09326032085d06627dc118af03213d2686b16eda
-    
     song = testSongs(i);
     
     indexSong = find(testSongsList == song);

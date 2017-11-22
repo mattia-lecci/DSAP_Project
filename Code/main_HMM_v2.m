@@ -3,15 +3,15 @@
 close all
 clear all
 
-trainPerc = .7;
+trainPerc = .9;
 
 addpath('init','Utilities','SVM','GaussianMixture')
 addpath('hmm', 'beatles_dataset');
-albums = {'Please please me'};
+albums = {'Sgt Peppers Lonety Hearts' 'Rubber Soul' 'Revolver' 'Magical Mistery Tour' 'Let It Be' 'Please please me' 'Help' 'With The Beatles' 'A Hard Days Night' 'Abbey Road' 'Beatles For Sale'};
 
 %% init
 
-performFeatureExtractionHMM = true;
+performFeatureExtractionHMM = false;
 
 if performFeatureExtractionHMM
     
@@ -87,12 +87,10 @@ if performSplitDataHMM
     
     Ntot = length(allSongs);
     
-    [trainSongIdx,~,testSongIdx] = dividerand(Ntot,trainPerc,0,1-trainPerc);
-    trainSongIdx = trainSongIdx(randperm(length(trainSongIdx)));
-    testSongIdx = testSongIdx(randperm(length(testSongIdx)));
+    [trainSongsIdx,~,testSongsIdx] = dividerand(Ntot,trainPerc,0,1-trainPerc);
     
-    trainSongs = allSongs(trainSongIdx);
-    testSongs = allSongs(testSongIdx);
+    trainSongs = allSongs(trainSongsIdx);
+    testSongs = allSongs(testSongsIdx);
     
     trainIdx = find(ismember(allSongsList,trainSongs));
     testIdx = find(ismember(allSongsList,testSongs));

@@ -28,7 +28,7 @@ function songLabels = extractSongsChords(path, names, numberFrame)
                         labels(w) = categorical(cellstr('G#'));
                     else
                         if strcmp(s(2),'min')
-                            labels(w) = categorical(strcat('G#',':','min'));
+                            labels(w) = categorical(cellstr(strcat('G#',':','min')));
                         else
                             labels(w) = categorical(cellstr('G#'));
                         end
@@ -39,7 +39,7 @@ function songLabels = extractSongsChords(path, names, numberFrame)
                         labels(w) = categorical(s(1));
                     else
                         if strcmp(s(2),'min')
-                            labels(w) = categorical(strcat(s(1),':','min'));
+                            labels(w) = categorical(cellstr(strcat(s(1),':','min')));
                         else
                             labels(w) = categorical(s(1));
                         end
