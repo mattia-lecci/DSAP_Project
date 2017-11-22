@@ -7,11 +7,11 @@ trainPerc = .7;
 
 addpath('init','Utilities','SVM','GaussianMixture')
 addpath('hmm', 'beatles_dataset');
-albums = {'Please please me' 'With The Beatles'};
+albums = {'Please please me'};
 
 %% init
 
-performFeatureExtractionHMM = false;
+performFeatureExtractionHMM = true;
 
 if performFeatureExtractionHMM
     
@@ -94,14 +94,11 @@ if performSplitDataHMM
     trainSongs = allSongs(trainSongIdx);
     testSongs = allSongs(testSongIdx);
     
-    trainSongsList = categorical(trainSongs);
-    testSongsList = categorical(testSongs);
-    
     trainIdx = find(ismember(allSongsList,trainSongs));
     testIdx = find(ismember(allSongsList,testSongs));
     
     trainSongsList = allSongsList(trainIdx);
-    testSongList = allSingList(testIdx);
+    testSongsList = allSongsList(testIdx);
     
     trainDiscographyFeatures = allDiscographyFeatures(trainIdx);
     testDiscographyFeatures = allDiscographyFeatures(testIdx);
