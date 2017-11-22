@@ -77,7 +77,7 @@ end
 
 %% Split train and test data
 
-performSplitDataHMM = false;
+performSplitDataHMM = true;
     
 if performSplitDataHMM  
     
@@ -101,6 +101,7 @@ if performSplitDataHMM
     testIdx = find(ismember(allSongsList,testSongs));
     
     trainSongsList = allSongsList(trainIdx);
+    testSongList = allSingList(testIdx);
     
     trainDiscographyFeatures = allDiscographyFeatures(trainIdx);
     testDiscographyFeatures = allDiscographyFeatures(testIdx);
