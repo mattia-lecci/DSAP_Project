@@ -3,7 +3,7 @@
 close all
 clear all
 
-trainPerc = .9;
+trainPerc = .8;
 
 addpath('init','Utilities','SVM','GaussianMixture')
 addpath('hmm', 'beatles_dataset');
@@ -11,7 +11,7 @@ albums = {'Sgt Peppers Lonety Hearts' 'Rubber Soul' 'Revolver' 'Magical Mistery 
 
 %% init
 
-performFeatureExtractionHMM = false;
+performFeatureExtractionHMM = true;
 
 if performFeatureExtractionHMM
     
@@ -25,7 +25,7 @@ if performFeatureExtractionHMM
     
         %I obtain a cell contained name of the song + features per song + number of frame per song
     
-        [albumFeatures, songLengths] = extractSongsFeatures(fullfile('beatles_dataset\',albums{i},'\'),audioSongNames);
+        [albumFeatures, songLengths] = extractSongsFeatures_CRP(fullfile('beatles_dataset\',albums{i},'\'),audioSongNames);
         disp('Album features extraction finished!');
     
         %Extraction of the chord features of the songs of this album. We
@@ -71,7 +71,7 @@ if performFeatureExtractionHMM
     
     disp 'Saving data...';
     
-    save('Save/initHMM','allDiscographyFeatures','allDiscographyChords', 'true_allChordsList', 'allSongs', 'allSongsList', 'chords');
+    save('Save/HMM_CRP/initHMM','allDiscographyFeatures','allDiscographyChords', 'true_allChordsList', 'allSongs', 'allSongsList', 'chords');
     
 end
 
@@ -83,7 +83,7 @@ if performSplitDataHMM
     
     disp 'Loading data...';
     
-    load 'Save/initHMM';    
+    load 'Save/HMM_CRP/initHMM';    
     
     Ntot = length(allSongs);
     
@@ -111,9 +111,9 @@ if performSplitDataHMM
     
     disp 'Saving test data...'
     
-    save('Save/initTrainHMM','trainDiscographyFeatures','trainDiscographyChords', 'true_trainChordsList', 'trainSongs', 'trainSongsList', 'chords');
+    save('Save/HMM_CRP/initTrainHMM','trainDiscographyFeatures','trainDiscographyChords', 'true_trainChordsList', 'trainSongs', 'trainSongsList', 'chords');
     
-    save('Save/initTestHMM','testDiscographyFeatures','testDiscographyChords','true_testChordsList', 'testSongs', 'testSongsList');
+    save('Save/HMM_CRP/initTestHMM','testDiscographyFeatures','testDiscographyChords','true_testChordsList', 'testSongs', 'testSongsList');
     
 else
     
@@ -121,9 +121,9 @@ else
     
     disp 'Loading test data...'
     
-    load 'Save/initTrainHMM';
+    load 'Save/HMM_CRP/initTrainHMM';
     
-    load 'Save/initTestHMM';
+    load 'Save/HMM_CRP/initTestHMM';
 end
 
 
@@ -131,14 +131,14 @@ end
 
 kernel = 'polynomial';
 
-disp 'Training SVM with CENS features...'
+disp 'Training SVM with extracted features...'
 mdlSvmCens = trainSVM( createDataMatrix(trainDiscographyFeatures),...
     true_trainChordsList, 'KernelFunction',kernel );
 
 
 %% Predict with SVM
 
-disp 'Testing SVM with CENS features...'
+disp 'Testing SVM with extracted features...'
 
 pred_trainChordList = mdlSvmCens.predict( createDataMatrix(trainDiscographyFeatures));
 
@@ -178,7 +178,7 @@ disp 'Computing performance...'
 %The first row of the vector shows error with HMM system, the second row
 %without HMM system
 
-errors = zeros(2,size(testSongs,1));
+w = 1;
 
 states = rot90(chords);
 
@@ -202,11 +202,20 @@ for i=1:size(testSongs,1)
 
     [total, argmax, valmax] = forward_viterbi(numeric_obs,states,startProb,transProb,emProb);
     
-    argmax = argmax(1:(size(argmax,2)-1));
+    if valmax~=0
+        argmax = argmax(1:(size(argmax,2)-1));
     
-    errors(1,i) = computeError(true_testChordsList(indexSong),categorical(argmax));
+        errors(1,w) = computeError(true_testChordsList(indexSong),categorical(argmax));
     
-    errors(2,i) = computeError(true_testChordsList(indexSong),obs);
+        errors(2,w) = computeError(true_testChordsList(indexSong),obs);
+        
+        smoothing(1,w)=getSmooth(categorical(argmax));
+        
+        smoothing(2,w)=getSmooth(obs);
+        
+        w=w+1;
+        
+    end
     
 end
 
