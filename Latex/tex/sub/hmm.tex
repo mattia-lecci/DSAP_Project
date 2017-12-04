@@ -1,8 +1,3 @@
 \subsection{Hidden Markov Models (HMMs)}
 \label{subsec:hmm}
 
-\textit{Support Vector Machines} (SVM) are a well known and widely used \textit{Machine Learning} algorithm for binary classification. Before Neural Networks became so popular, they generally outperformed most of the other standard classification (and also regression) algorithms. Some good advantages over them is the possibility of choosing non-linear kernels (the most famous ones are the \textit{Gaussian/RBF} and the \textit{Polynomial}). Also, they are far easier to program and optimize than Neural Networks (less hyperparameters) and they tend to overfit less.\\
-%
-Their main problem, though, is that they were conceived for binary classification. Their extension to multiclass classification is not trivial but there are some standards ways to do it. One of them is already implemented in Matlab and it's called \textit{Error-Correcting Output Codes} (ECOC). It works by creating multiple classifiers and assigning to each of them some classes to be considered positive and some other to be negative and by assigning weights to these binary classifiers, the final decision is taken.\\
-%
-For our tests we used the \textit{One-vs-One} method, meaning that we create a classifier for every couple of classes ($O(K^2)$) assigning one to the positive and one to the negative, while ignoring everything else. This is usually a good tradeoff between complexity and precision, but other options could be explored in future works.

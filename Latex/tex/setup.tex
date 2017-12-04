@@ -1,3 +1,8 @@
 \section{Experiment Setup}
 \label{sec:setup}
 
+Our experimentation was split in two parts: the first was about recognizing a single chord from a single chord track, the second one was about recognizing the chords of full songs.\\
+%
+For the first part, we used the dataset \texttt{jim2012Chords} \cite{jim2012Chords} created for their paper \cite{JimChordsPaper}. It's composed of a total of over $2.000$ recordings of 10 guitar chords (both major and minor triads). Four different Guitars are used, as well as Piano, Violin and Accordion. Some tracks were recorded in an anechoic chamber, some other in a noisy environment. For each one of the tracks we obtain a 12-dimensional feature vector using \textit{Chroma Toolbox} and taking the maximum value for each note. Looking at Fig.~\ref{fig:CENSexample}, the idea is that we are interested in high values of specific groups of notes in order to guess the chord and the maximum value is a simple way of doing this. It's biggest disadvantage is that impulsive noisy environment can easily mask the useful information introducing high values in the wrong notes. Finally, we run the different methods on these obtained 12D vectors.\\
+%
+Fo the second part, we used \textit{The Beatles}' discography, which has been professionally transcribed. \dots
