@@ -182,7 +182,7 @@ w = 1;
 
 states = rot90(chords);
 
-for i=1:size(testSongs,1)
+for i=1:1
     
     song = testSongs(i);
     
@@ -204,6 +204,20 @@ for i=1:size(testSongs,1)
     
     if valmax~=0
         argmax = argmax(1:(size(argmax,2)-1));
+        
+        numeric_argmax = zeros(1,size(argmax,2));
+    
+        for j=1:size(chords)
+            
+            a = categorical(argmax);
+            
+            a = a';
+    
+            [indexChords, ~] = find(a==chords(j));
+    
+            numeric_argmax(indexChords)=j;
+    
+        end   
     
         errors(1,w) = computeError(true_testChordsList(indexSong),categorical(argmax));
     
