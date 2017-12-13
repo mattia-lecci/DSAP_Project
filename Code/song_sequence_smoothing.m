@@ -1,7 +1,7 @@
 clear all;
 close all;
 
-load 'Result/CRP/smoothing07'
+load 'Result/CRP/smoothing'
 
 y1 = smoothing(2,:);
 y2 = smoothing(1,:);
