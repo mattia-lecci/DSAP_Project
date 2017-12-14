@@ -1,7 +1,7 @@
 clear all;
 close all;
 
-load 'Result/CRP/smoothing'
+load 'Result/CENS/smoothingpersong'
 
 y1 = smoothing(2,:);
 y2 = smoothing(1,:);
@@ -13,6 +13,7 @@ end
 
 bar(y,1);
 ylim([0 200]);
+xlim([0 13]);
 hold on;
 grid on;
 legend('Before processing HMM', 'After processing HMM');

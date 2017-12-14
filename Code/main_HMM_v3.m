@@ -83,7 +83,7 @@ if performSplitDataHMM
     
     disp 'Loading data...';
     
-    load 'Save/HMM_CRP/initHMM';    
+    load 'Save/HMM_CENS/initHMM';    
     
     Ntot = length(allSongs);
     
@@ -182,7 +182,7 @@ w = 1;
 
 states = rot90(chords);
 
-for i=1:1
+for i=1:size(testSongs,1)
     
     song = testSongs(i);
     
@@ -217,7 +217,11 @@ for i=1:1
     
             numeric_argmax(indexChords)=j;
     
-        end   
+        end
+        
+        smoothsong{1,w} = numeric_argmax;
+        
+        smoothsong{2,w} = numeric_obs;
     
         errors(1,w) = computeError(true_testChordsList(indexSong),categorical(argmax));
     

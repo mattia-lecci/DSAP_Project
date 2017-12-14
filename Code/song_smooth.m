@@ -1,11 +1,11 @@
 close all;
 clear all;
 
-load 'Result/CRP/smoothingsong';
+load 'Result/CENS/smoothingsinglesong';
 
 subplot(1,2,1);
 
-stairs(numeric_obs);
+stairs(s2);
 grid on;
 ylim([0 31]);
 xlim([0 143]);
@@ -16,7 +16,7 @@ xlabel('Frame');
 
 subplot(1,2,2);
 
-stairs(numeric_argmax);
+stairs(s1);
 grid on;
 ylim([0 31]);
 xlim([0 143]);
