@@ -3,7 +3,7 @@
 close all
 clear all
 
-trainPerc = .9;
+trainPerc = .7;
 
 addpath('init','Utilities','SVM','GaussianMixture')
 addpath('hmm', 'beatles_dataset');
@@ -83,7 +83,7 @@ if performSplitDataHMM
     
     disp 'Loading data...';
     
-    load 'Save/HMM_CRP/initHMM';    
+    load 'Save/HMM_CLP/initHMM';    
     
     Ntot = length(allSongs);
     
@@ -224,3 +224,5 @@ basic_error = mean(errors(2,:));
 
 disp 'Error without HMM: '; disp(basic_error);
 disp 'Error with HMM: '; disp(hmm_error);
+
+save('Result/CLP/Test03Train07#1','errors','hmm_error','basic_error');
