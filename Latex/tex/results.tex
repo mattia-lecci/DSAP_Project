@@ -1,6 +1,27 @@
 \section{Results}
 \label{sec:results}
 
+For the first part of the experiment we simply run all the different classification methods explained in Section~\ref{sec:setup} randomly splitting the dataset into $70\%$ training and $30\%$ testing. The results can be clearly seen in Tab.~\ref{tab:singleChordResults}.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{|c|c|c|c|}
+	\hline 
+	& CLP & CENS & CRP \\ 
+	\hline 
+	GMM & 14.58\% & 6.94\% & 11.81\% \\ 
+	\hline 
+	SVM (linear) & 13.61\% & 6.39\% & 12.64\% \\ 
+	\hline 
+	SVM (poly) & 10.56\% & 4.17\% & 7.92\% \\ 
+	\hline 
+	SVM (RBF) & 10.00\% & 4.31\% & 7.78\% \\ 
+	\hline 
+\end{tabular}
+\caption{Results of the first part of the tests (single chord recognition).}
+\label{tab:singleChordResults}
+\end{table} 
+
 % I write the description of the plots in their caption. In a succesive step of the work we can move the plot descriptions in the text.
 
 As said in the previous section, in the second part of the experiment we get two different kind of outputs, the first produced only by MC-SVM and the second produced by MC-SVM combined with HMM. In order to verify the quality of ours results we can compare them with the labels trasncribed by Harte, that we call $\mathcal{L}_{Harte}$. Given $\mathcal{L}_{SVM}$, $\mathcal{L}_{HMM}$ and $\mathcal{L}_{Harte}$ for a certain value of $r_{test}$ and for a particular extracted feature we can compute the error probability making the ratio between all the corresponding chords between $\mathcal{L}_{HMM}$ and $\mathcal{L}_{Harte}$ and the total number of testing chords $|\mathcal{L}_{Harte}| \times r_{test}$. 
