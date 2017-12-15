@@ -6,7 +6,7 @@
 As said in the previous section, in the second part of the experiment we get two different kind of outputs, the first produced only by MC-SVM and the second produced by MC-SVM combined with HMM. In order to verify the quality of ours results we can compare them with the labels trasncribed by Harte, that we call $\mathcal{L}_{Harte}$. Given $\mathcal{L}_{SVM}$, $\mathcal{L}_{HMM}$ and $\mathcal{L}_{Harte}$ for a certain value of $r_{test}$ and for a particular extracted feature we can compute the error probability making the ratio between all the corresponding chords between $\mathcal{L}_{HMM}$ and $\mathcal{L}_{Harte}$ and the total number of testing chords $|\mathcal{L}_{Harte}| \times r_{test}$. 
 
 
- In \ref{ta:resultbeforeHMM} we can look at the error probabilities obtained after the first step of testing, therefore before processing HMM. In \ref{tab:resultafterHMM} we can look at the results obtained after the second step of testing, therefore after processing HMM. In both cases we have different outputs depending on the testing rate $r_{test}$ and on the chosen extracted feature.
+ In \ref{tab:resultbeforeHMM} we can look at the error probabilities obtained after the first step of testing, therefore before processing HMM. In \ref{tab:resultafterHMM} we can look at the results obtained after the second step of testing, therefore after processing HMM. In both cases we have different outputs depending on the testing rate $r_{test}$ and on the chosen extracted feature.
 
 \begin{table}[h!]
 	\caption{Error before processing HMM}
@@ -33,7 +33,7 @@ As said in the previous section, in the second part of the experiment we get two
 	0.3 & 0.4179 & 0.5484 & 0.5204\\
 	\hline
 	\end{tabular}
-	\label{ta:resultafterHMM}
+	\label{tab:resultafterHMM}
 \end{table}
 
 \begin{figure} [h!]
