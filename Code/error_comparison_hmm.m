@@ -8,16 +8,18 @@ for i=1:size(errors,2)
     err(i,2) = errors(1,i);
 end
 
-bar(err);
+b = bar(err);
+
+b(2).FaceColor='r';
 
 grid on;
 
-ylim([0 1.2]); xlim([0 34]);
+ylim([0 1]); xlim([0 34]);
 
 ylabel('Error');
 xlabel('Song');
 
 title('Error comparison');
 
-legend('Before processing HMM', 'After processing HMM');
+legend('Before processing HMM', 'After processing HMM','Location','best');
 
