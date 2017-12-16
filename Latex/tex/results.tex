@@ -57,7 +57,8 @@ For the second part of the experiment we got two different kind of outputs for e
  Observing the results we make the following observations. First, we got best results with CENS features than with CLP and CRP features. We explain this remembering that for mantaing low the computational cost of our setup, we strongly limited the features extraction for CLP and CRP. Second, HMM proved to be able to enhance better results than MC-SVM alone in all the cases. This is not obvious since we worked with features of multi-instrumental sounds including also vocal parts. Indeed the chords prediction of some songs often isn't improved but is aggravated. We show this by comparing the two different results obtained with the same $\mathcal{D}_{train}$ as done in Fig.~\ref{fig:compareerror}.
 
 \begin{figure} [h!]
-	\includegraphics[width=0.5\textwidth]{img/Result_HMM/CENS/plot03071}
+	\centering
+	\includegraphics[width=0.45\textwidth]{img/Result_HMM/CENS/plot03071}
 	\caption{Error comparison using CENS features and $r_{test}=0.3$}
 	\label{fig:compareerror}
 \end{figure}
@@ -66,13 +67,15 @@ We concluded that HMM don't always improve our result for every single song. It 
 Fig.~\ref{fig:smoothmulti} and Fig.~\ref{fig:smoothsingle}. In particular in Fig.~\ref{fig:smoothsingle} we can see how HMM removes the chord-labels that are not repeated costantly over time and therefore result less likely.
 
 \begin{figure} [h!]
-	\includegraphics[width=0.5\textwidth]{img/Result_HMM/SMOOTHING/SmoothPerSongCENS0109}
+	\centering
+	\includegraphics[width=0.45\textwidth]{img/Result_HMM/SMOOTHING/SmoothPerSongCENS0109}
 	\caption{Chords variation per song using CENS features and $r_{test}=0.1$}
 	\label{fig:smoothmulti}
 \end{figure}
 
 \begin{figure} [h!]
-	\includegraphics[width=0.5\textwidth]{img/Result_HMM/SMOOTHING/SmoothSingleSongCENS0109}
+	\centering
+	\includegraphics[width=0.45\textwidth]{img/Result_HMM/SMOOTHING/SmoothSingleSongCENS0109}
 	\caption{Chord variation in a single song using CENS features and $r_{test}=0.1$}
 	\label{fig:smoothsingle}
 \end{figure}
