@@ -4,17 +4,17 @@
 \begin{table}[t]
 	\centering
 	\begin{tabular}{|c|ccc|}
-		\hline 
-		Classification & CLP & CENS & CRP \\ 
-		\hline 
+		\hline
+		Classification & CLP & CENS & CRP \\
+		\hline
 		Template (binary) & 24.17\% & 20.08\% & 24.96\% \\
 		Template (harmonic) & 23.04\% & 17.79\% & 20.38\% \\
-		GMM & 14.58\% & 6.94\% & 11.81\% \\ 
-		\hline 
-		SVM (linear) & 13.61\% & 6.39\% & 12.64\% \\ 
-		SVM (poly) & 10.56\% & 4.17\% & 7.92\% \\ 
-		SVM (RBF) & 10.00\% & 4.31\% & 7.78\% \\ 
-		\hline 
+		GMM & 14.58\% & 6.94\% & 11.81\% \\
+		\hline
+		SVM (linear) & 13.61\% & 6.39\% & 12.64\% \\
+		SVM (poly) & 10.56\% & 4.17\% & 7.92\% \\
+		SVM (RBF) & 10.00\% & 4.31\% & 7.78\% \\
+		\hline
 	\end{tabular}
 	\caption{Error results of the first part of the tests (single chord recognition).}
 	\label{tab:singleChordResults}
@@ -54,7 +54,7 @@ For the second part of the experiment we got two different kind of outputs for e
 	\label{tab:resultafterHMM}
 \end{table}
 
- Observing the results we make the following observations. First, we got best results with CENS features than with CLP and CRP features. We explain this remembering that for mantaing low the computational cost of our setup, we strongly limited the features extraction for CLP and CRP. Second, HMM proved to be able to enhance better results than MC-SVM alone in all the cases. This is not obvious since we worked with features of multi-instrumental sounds including also vocal parts. Indeed the chords prediction of some songs often isn't improved but is aggravated. We show this by comparing the two different results obtained with the same $\mathcal{D}_{train}$ as done in Fig.~\ref{fig:compareerror}.
+ Observing the results we make the following observations. First, we got best results with CENS features than with CLP and CRP features. This is reasonable since also in the first part of the experiment we got better results with CENS than others type of features. Second, HMM proved to be able to enhance better results than MC-SVM alone in all the cases. This is not obvious since we worked with features of multi-instrumental sounds including also vocal parts. Indeed the chords prediction of some songs often isn't improved but is aggravated. We show this by comparing the two different results obtained with the same $\mathcal{D}_{train}$ as done in Fig.~\ref{fig:compareerror}.
 
 \begin{figure} [h!]
 	\centering
