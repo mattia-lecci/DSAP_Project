@@ -1,24 +1,28 @@
 \section{Results}
 \label{sec:results}
 
-For the first part of the experiment we simply run all the different classification methods explained in Section~\ref{sec:setup} randomly splitting the dataset into $70\%$ training and $30\%$ testing. The results can be clearly seen in Tab.~\ref{tab:singleChordResults}.
+For the first part of the experiment we simply run all the different classification methods explained in Section~\ref{sec:setup} randomly splitting the dataset into $70\%$ training and $30\%$ testing. The results can be clearly seen in Tab.~\ref{tab:singleChordResults}. Note that the first approach (templates) yields very poor results even in such an idealized scenario, although the more advanced \textit{Harmonic Templates} improve a little bit performance over the simple \textit{Binary} ones. The jump to the more advanced GMMs is pretty clear as much as the one to SVMs. Overall, CENS features have by far the best error rates.
 
 \begin{table}[t]
 \centering
 \begin{tabular}{|c|c|c|c|}
+	\hline 
+	& CLP & CENS & CRP \\ 
+	\hline 
+	Template (binary) & 24.17\% & 20.08\% & 24.96\% \\
 	\hline
-	& CLP & CENS & CRP \\
+	Template (harmonic) & 23.04\% & 17.79\% & 20.38\% \\
 	\hline
-	GMM & 14.58\% & 6.94\% & 11.81\% \\
-	\hline
-	SVM (linear) & 13.61\% & 6.39\% & 12.64\% \\
-	\hline
-	SVM (poly) & 10.56\% & 4.17\% & 7.92\% \\
-	\hline
-	SVM (RBF) & 10.00\% & 4.31\% & 7.78\% \\
-	\hline
+	GMM & 14.58\% & 6.94\% & 11.81\% \\ 
+	\hline 
+	SVM (linear) & 13.61\% & 6.39\% & 12.64\% \\ 
+	\hline 
+	SVM (poly) & 10.56\% & 4.17\% & 7.92\% \\ 
+	\hline 
+	SVM (RBF) & 10.00\% & 4.31\% & 7.78\% \\ 
+	\hline 
 \end{tabular}
-\caption{Results of the first part of the tests (single chord recognition).}
+\caption{Error results of the first part of the tests (single chord recognition).}
 \label{tab:singleChordResults}
 \end{table}
 
