@@ -1,31 +1,30 @@
 \section{Results}
 \label{sec:results}
 
-For the first part of the experiment we simply run all the different classification methods explained in Section~\ref{sec:setup} randomly splitting the dataset into $70\%$ training and $30\%$ testing. The results can be clearly seen in Tab.~\ref{tab:singleChordResults}. Note that the first approach (templates) yields very poor results even in such an idealized scenario, although the more advanced \textit{Harmonic Templates} improve a little bit performance over the simple \textit{Binary} ones. The jump to the more advanced GMMs is pretty clear as much as the one to SVMs. Overall, CENS features have by far the best error rates.
-
 \begin{table}[t]
-\centering
-\begin{tabular}{|c|c|c|c|}
-	\hline 
-	& CLP & CENS & CRP \\ 
-	\hline 
-	Template (binary) & 24.17\% & 20.08\% & 24.96\% \\
-	\hline
-	Template (harmonic) & 23.04\% & 17.79\% & 20.38\% \\
-	\hline
-	GMM & 14.58\% & 6.94\% & 11.81\% \\ 
-	\hline 
-	SVM (linear) & 13.61\% & 6.39\% & 12.64\% \\ 
-	\hline 
-	SVM (poly) & 10.56\% & 4.17\% & 7.92\% \\ 
-	\hline 
-	SVM (RBF) & 10.00\% & 4.31\% & 7.78\% \\ 
-	\hline 
-\end{tabular}
-\caption{Error results of the first part of the tests (single chord recognition).}
-\label{tab:singleChordResults}
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline 
+		& CLP & CENS & CRP \\ 
+		\hline 
+		Template (binary) & 24.17\% & 20.08\% & 24.96\% \\
+		\hline
+		Template (harmonic) & 23.04\% & 17.79\% & 20.38\% \\
+		\hline
+		GMM & 14.58\% & 6.94\% & 11.81\% \\ 
+		\hline 
+		SVM (linear) & 13.61\% & 6.39\% & 12.64\% \\ 
+		\hline 
+		SVM (poly) & 10.56\% & 4.17\% & 7.92\% \\ 
+		\hline 
+		SVM (RBF) & 10.00\% & 4.31\% & 7.78\% \\ 
+		\hline 
+	\end{tabular}
+	\caption{Error results of the first part of the tests (single chord recognition).}
+	\label{tab:singleChordResults}
 \end{table}
 
+For the first part of the experiment we simply run all the different classification methods explained in Section~\ref{sec:setup} randomly splitting the dataset into $70\%$ training and $30\%$ testing. The results can be clearly seen in Tab.~\ref{tab:singleChordResults}. Note that the first approach (templates) yields very poor results even in such an idealized scenario, although the more advanced \textit{Harmonic Templates} improve a little bit performance over the simple \textit{Binary} ones. The jump to the more advanced GMMs is pretty clear as much as the one to SVMs. Overall, CENS features have by far the best error rates.
 
 For the second part of the experiment we got two different kind of outputs for each song, which are $\mathcal{L}_{SVM}$ and $\mathcal{L}_{HMM}$. In order to verify the quality of ours results we compared them with  $\mathcal{L}_{Harte}$. Given $\mathcal{L}_{SVM}$ ($\mathcal{L}_{HMM}$) and $\mathcal{L}_{Harte}$ for a certain value of $r_{test}$ and for a certain extracted feature we computed the error probability counting all the matching between $\mathcal{L}_{SVM}$ ($\mathcal{L}_{HMM}$) and $\mathcal{L}_{Harte}$.
 
