@@ -4,13 +4,12 @@ clc
 
 %% init
 % paths
-addpath('init','Utilities','SVM','GaussianMixture')
+addpath('init','Utilities','SVM','GaussianMixture','Templates')
 
-rng(1); % for reproducibility
 % parameters
 trainPerc = .7;
 mat2vecFunc = @(x)max(x,[],2);
-kernel = 'rbf';
+kernel = 'polynomial';
 
 % flags
 performFeatureExtraction = false;
@@ -18,8 +17,8 @@ performFeatureExtraction = false;
 % feature extraction
 if performFeatureExtraction
     % extract names and chords labels
+    chordTable = getNameChordTable('wavs');
     
-    chordTable = getNameChordTable('wavs'); %#ok<*UNRCH>
     CLP_features = extractBatchFeatures(chordTable.Path,'CLP',mat2vecFunc);
     CENS_features = extractBatchFeatures(chordTable.Path,'CENS',mat2vecFunc);
     CRP_features = extractBatchFeatures(chordTable.Path,'CRP',mat2vecFunc);
@@ -60,14 +59,38 @@ mdlSvmCrp = trainSVM( createDataMatrix(CRP_features(trainIdx)),...
     chordTable.Chord(trainIdx), 'KernelFunction',kernel );
 
 %% template
-% predChords = zero(length(testIdx),1);
+% predChords1 = CLP_features; %Antes testIdx
+% predChords2 = CLP_features;
+% predChords3 = CLP_features;
+% %Test:
+% % A = batchVec12{1,1}'; Este da....
+% % REssss = templateDecision(A,1)
 % 
-% for i = 1:length(predChords)
-%     predChords(i) = templateDecision( batchVec12{i},templateType );
+% batchVec12 = CLP_features;
+% templateType = 1;
+% 
+% 
+% for i = 1:length(predChords1)
+%     batchIntermediate = batchVec12{i,1}';
+%     [predChords1(i),predChords2(i),predChords3(i)] = templateDecision(batchIntermediate,templateType );
 %     % for each template type and feature type
 % end
 % 
-% err = computeError(real,predicted);
+% check1 = categorical(predChords1);
+% check2 = categorical(predChords2);
+% check3 = categorical(predChords3);
+% 
+% err1 = computeError(chordTable{:,2},check1);
+% err2 = computeError(chordTable{:,2},check2);
+% err3 = computeError(chordTable{:,2},check3);
+
+
+[errorCens1,errorCens2] = TemplatesResults(CENS_features,chordTable);
+[errorCLP1,errorCLP2] = TemplatesResults(CLP_features,chordTable);
+[errorCRP1,errorCRP2] = TemplatesResults(CRP_features,chordTable);
+
+
+
 % for each predChords
 
 %% statistical methods (already trained)
@@ -99,10 +122,19 @@ errorSvmCrp = computeError(trueTestLabels,predSvmCrp);
 disp 'Error evaluation with gaussian mixture:'
 fprintf('Gaussian with CENS features error: %.2f%%\n',errorGaussCens*100);
 fprintf('Gaussian with CLP features error: %.2f%%\n',errorGaussClp*100);
-fprintf('Gaussian with CRP features error: %.2f%%\n',errorGaussCrp*100);
+fprintf('Gaussina with CRP features error: %.2f%%\n',errorGaussCrp*100);
 
-fprintf('Error evaluation with SVM (%s):\n',kernel')
+disp 'Error evaluation with SVM:'
 fprintf('SVM with CENS features error: %.2f%%\n',errorSvmCens*100);
 fprintf('SVM with CLP features error: %.2f%%\n',errorSvmClp*100);
 fprintf('SVM with CRP features error: %.2f%%\n',errorSvmCrp*100);
+
+
+disp 'Error evaluation with Templates:'
+fprintf('Binary with CENS features error: %.2f%%\n',errorCens1*100);
+fprintf('Binary  with CLP features error: %.2f%%\n',errorCLP1*100);
+fprintf('Binary with CRP features error: %.2f%%\n',errorCRP1*100);
+fprintf('Harmonic with CENS features error: %.2f%%\n',errorCens2*100);
+fprintf('Harmonic with CLP features error: %.2f%%\n',errorCLP2*100);
+fprintf('Harmonic with CRP features error: %.2f%%\n',errorCRP2*100);
 % grid on

@@ -51,6 +51,7 @@ parfor i = 1:Ntot
     end
     
     batchVec12{i} = mat2vecFunc(f);
+    batchVec12{i} = batchVec12{i}/norm(batchVec12{i});
     
 end
 
