@@ -3,7 +3,7 @@ clear all;
 
 load 'Result/CENS/smoothingsinglesong';
 
-subplot(1,2,1);
+subplot(2,1,1);
 
 stairs(s2);
 grid on;
@@ -14,7 +14,7 @@ title('Chords variation before processing HMM');
 ylabel('Chord');
 xlabel('Frame');
 
-subplot(1,2,2);
+subplot(2,1,2);
 
 stairs(s1);
 grid on;
