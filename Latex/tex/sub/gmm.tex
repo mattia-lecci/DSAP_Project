@@ -1,7 +1,7 @@
 \subsection{Gaussian Mixture Models (GMMs)}
 \label{subsec:gmm}
 
-\textit{Gaussian Mixture Models} are a statistic technique used to individue subpopolations within an overall population. At the end of the process, each subpopulation is assigned to a \gls{mgd}.  As it is widely knows, \gls{mgd} is defined only by a mean vector and a covariance matrix. We notice that given a \gls{mgd} it is very simple determine the probability of that an object belongs to the distribution. We just need to implement the \textit{Mahalanobis distance} which measures how many standard deviations the selected object is distant from the distribution mean. \\
+\textit{Gaussian Mixture Models} are a statistic technique used to individuate subpopulations within an overall population. At the end of the process, each subpopulation is assigned to a \gls{mgd}.  As it is widely knows, \gls{mgd} is defined only by a mean vector and a covariance matrix. We notice that given a \gls{mgd} it is very simple determine the probability of that an object belongs to the distribution. We just need to implement the \textit{Mahalanobis distance} which measures how many standard deviations the selected object is distant from the distribution mean. \\
 %
 MATLAB defines a class called \textit{gmdistribution} which allows to construct an object that contain one or more \gls{mgd}s. This object can be built either by adding every distributions by ourself (supervised method) or fitting the entire population with a chosen number of distributions (unsupervised method). MATLAB offers also the method \textit{mahal} to compute the Mahalanobis distance between an object $X$ and a GMM. \\
 %
