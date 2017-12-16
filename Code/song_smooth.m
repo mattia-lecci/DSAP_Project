@@ -11,16 +11,16 @@ ylim([0 31]);
 xlim([0 143]);
 
 title('Chords variation before processing HMM');
-ylabel('Chord');
+ylabel('Chord index');
 xlabel('Frame');
 
 subplot(2,1,2);
 
-stairs(s1);
+stairs(s1,'r');
 grid on;
 ylim([0 31]);
 xlim([0 143]);
 
 title('Chords variation after processing HMM');
-ylabel('Chord');
+ylabel('Chord index');
 xlabel('Frame');
