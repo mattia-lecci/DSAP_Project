@@ -19,10 +19,10 @@
 	\vspace{-5mm}
 \end{figure*}
 %
-Feature extraction is performed using \textit{Chroma Toolbox} \cite{ChromaToolbox}, a MATLAB implementation of many different audio/musical features under GPL license.\\
-%
-At first, the audio signal is decomposed into 88 frequency bands centered in the frequencies corresponding to the pitches of notes A0 up to C8. A multirate filter bank using elliptic filters is used and finally \textit{Short-Time Mean-Square Power} (STMSP) is used to extract the useful information. In order to ignore the different harmonic profiles given by different instruments, the energies referred to the same notes are pooled together resulting in 12-dimensional vectors.\\
-%
+Feature extraction is performed using \textit{Chroma Toolbox} \cite{ChromaToolbox}, a MATLAB implementation of many different audio/musical features under GPL license.
+
+At first, the audio signal is decomposed into 88 frequency bands centered in the frequencies corresponding to the pitches of notes A0 up to C8. A multirate filter bank using elliptic filters is used and finally \textit{Short-Time Mean-Square Power} (STMSP) is used to extract the useful information. In order to ignore the different harmonic profiles given by different instruments, the energies referred to the same notes are pooled together resulting in 12-dimensional vectors.
+
 The different features are then obtained operating in different ways on the extracted pitches. In this project we used three of them:
 \begin{itemize}[noitemsep,nolistsep]
 	\item CLP (\textit{Chroma Features with Logarithmic Compression}): bands from different octaves are summed together, a logarithmic function is applied (to emulate our logarithmic perception of sound intensity) and then the vector is normalized in $L_2$-norm.

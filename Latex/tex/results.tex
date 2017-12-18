@@ -1,7 +1,7 @@
 \section{Results}
 \label{sec:results}
 
-\begin{table}[t]
+\begin{table}[t!]
 	\centering
 	\begin{tabular}{|c|ccc|}
 		\hline
@@ -20,51 +20,81 @@
 	\label{tab:singleChordResults}
 \end{table}
 
-For the first part of the experiment we simply run all the different classification methods explained in Section~\ref{sec:setup} randomly splitting the dataset into $70\%$ training and $30\%$ testing. The results can be clearly seen in Tab.~\ref{tab:singleChordResults}. Note that the first approach (templates) yields very poor results even in such an idealized scenario, although the more advanced \textit{Harmonic Templates} improve a little bit performance over the simple \textit{Binary} ones. The jump to the more advanced GMMs is pretty clear as much as the one to SVMs. Overall, CENS features have by far the best error rates.
+For the first part of the experiment we simply run all the different classification methods explained in Section~\ref{sec:setup} randomly splitting the dataset into $70\%$ training and $30\%$ testing. The results can be clearly seen in Tab.~\ref{tab:singleChordResults}. Note that the first approach (templates) yields very poor results even in such an idealized scenario, while the more advanced \textit{Harmonic Templates} improved a little bit performance over the simple \textit{Binary} ones. The jump to the more advanced GMMs is pretty clear as much as the one to SVMs. Overall, CENS features have by far the best error rates.
 
-For the second part of the experiment we got two different kind of outputs for each song, which are $\mathcal{L}_{SVM}$ and $\mathcal{L}_{HMM}$. In order to verify the quality of ours results we compared them with  $\mathcal{L}_{Harte}$. Given $\mathcal{L}_{SVM}$ ($\mathcal{L}_{HMM}$) and $\mathcal{L}_{Harte}$ for a certain value of $r_{test}$ and for a certain extracted feature we computed the error probability counting all the matching between $\mathcal{L}_{SVM}$ ($\mathcal{L}_{HMM}$) and $\mathcal{L}_{Harte}$.
+\begin{table*}[t]
+	\hfill
+	\subfigure[Before the processing with HMM]{
+		\centering
+		\begin{tabular}{|c |c c c|}
+			\hline
+			$r_{test}$ & CENS & CLP & CRP\\ \hline
+			0.1 & 49.46\% & 47.39\% & 62.06\%\\
+			0.2 & 46.57\% & 60.00\% & 63.76\%\\
+			0.3 & 47.65\% & 56.91\% & 58.03\%\\
+			\hline
+		\end{tabular}
+		\label{tab:resultbeforeHMM}
+	}
+	\hfill
+	\subfigure[After the processing with HMM]{
+		\centering
+		\begin{tabular}{|c |c c c|}
+			\hline
+			$r_{test}$ & CENS & CLP & CRP\\ \hline
+			0.1 & 44.39\% & 45.02\% & 56.41\%\\
+			0.2 & 42.96\% & 59.19\% & 59.67\%\\
+			0.3 & 41.79\% & 54.84\% & 52.04\%\\
+			\hline
+		\end{tabular}
+		\label{tab:resultafterHMM}
+	}
+	\hfill
+	\caption{Results of the second part}
+\end{table*}
 
- In Tab.~\ref{tab:resultbeforeHMM} we can look at the error probabilities obtained after the first step of testing, before processing HMM. In Tab.~\ref{tab:resultafterHMM} we can look at the results obtained after the second step of testing, after processing HMM. In both cases we show different outputs depending on the testing rate $r_{test}$ and on the chosen extracted feature.
+For the second part of the experiment we got two different kind of outputs for each song, which are $\mathcal{L}_{SVM}$ and $\mathcal{L}_{HMM}$. In order to verify the quality of our results we compared them with  $\mathcal{L}_{Harte}$. Given $\mathcal{L}_{SVM}$ ($\mathcal{L}_{HMM}$) and $\mathcal{L}_{Harte}$ for a certain value of $r_{test}$ and for a certain extracted feature we computed the error probability as a simple normalized \textit{Hamming distance}.
 
-\begin{table}[h!]
-	\caption{Results of the second part before processing HMM}
-	\centering
-	\begin{tabular}{|c |c c c|}
-	\hline
-	$r_{test}$ & CENS & CLP & CRP\\ \hline
-	0.1 & 49.46\% & 47.39\% & 62.06\%\\
-	0.2 & 46.57\% & 60.00\% & 63.76\%\\
-	0.3 & 47.65\% & 56.91\% & 58.03\%\\
-	\hline
-	\end{tabular}
-	\label{tab:resultbeforeHMM}
-\end{table}
+ In Tabs.~\ref{tab:resultbeforeHMM},\ref{tab:resultafterHMM} we can see the results respectively before and after the HMM processing. In both cases we show different outputs depending on the testing rate $r_{test}$ and on the chosen extracted feature.
 
-\begin{table}[h!]
-	\caption{Results of the second parts after processing HMM}
-	\centering
-	\begin{tabular}{|c |c c c|}
-	\hline
-	$r_{test}$ & CENS & CLP & CRP\\ \hline
-	0.1 & 44.39\% & 45.02\% & 56.41\%\\
-	0.2 & 42.96\% & 59.19\% & 59.67\%\\
-	0.3 & 41.79\% & 54.84\% & 52.04\%\\
-	\hline
-	\end{tabular}
-	\label{tab:resultafterHMM}
-\end{table}
+%\begin{table}[h!]
+%	\caption{Results of the second part before processing HMM}
+%	\centering
+%	\begin{tabular}{|c |c c c|}
+%	\hline
+%	$r_{test}$ & CENS & CLP & CRP\\ \hline
+%	0.1 & 49.46\% & 47.39\% & 62.06\%\\
+%	0.2 & 46.57\% & 60.00\% & 63.76\%\\
+%	0.3 & 47.65\% & 56.91\% & 58.03\%\\
+%	\hline
+%	\end{tabular}
+%	\label{tab:resultbeforeHMM}
+%\end{table}
+%
+%\begin{table}[h!]
+%	\caption{Results of the second parts after processing HMM}
+%	\centering
+%	\begin{tabular}{|c |c c c|}
+%	\hline
+%	$r_{test}$ & CENS & CLP & CRP\\ \hline
+%	0.1 & 44.39\% & 45.02\% & 56.41\%\\
+%	0.2 & 42.96\% & 59.19\% & 59.67\%\\
+%	0.3 & 41.79\% & 54.84\% & 52.04\%\\
+%	\hline
+%	\end{tabular}
+%	\label{tab:resultafterHMM}
+%\end{table}
 
- Observing the results we make the following observations. First, we got best results with CENS features than with CLP and CRP features. This is reasonable since also in the first part of the experiment we got better results with CENS than others type of features. Second, HMM proved to be able to enhance better results than MC-SVM alone in all the cases. This is not obvious since we worked with features of multi-instrumental sounds including also vocal parts. Indeed the chords prediction of some songs often isn't improved but is aggravated. We show this by comparing the two different results obtained with the same $\mathcal{D}_{train}$ as done in Fig.~\ref{fig:compareerror}.
+ From these results we make the following observations. First, CENS features performed the best. Second, HMM proved to be able to enhance the results with respect to MC-SVM alone in all the cases. This is not obvious since we worked with features of multi-instrumental sounds including also vocal and drum parts. Indeed the chords prediction of some songs often isn't improved but is aggravated. We show this by comparing the two different results obtained with the same $\mathcal{D}_{train}$ as done in Fig.~\ref{fig:compareerror}.
 
-\begin{figure} [h!]
+\begin{figure} [t]
 	\centering
 	\includegraphics[width=0.45\textwidth]{img/Result_HMM/CENS/plot03071}
 	\caption{Error comparison using CENS features and $r_{test}=0.3$}
 	\label{fig:compareerror}
 \end{figure}
 
-We concluded that HMM don't always improve our result for every single song. It is able to do so only in average. However what HMM is able to do for each song is reduce the chords variation. We define chord variation as the number of times that a chord sequence varies within the same song, therefore the number of times that $\mathcal{L}(i) \neq \mathcal{L}(i-1)$. This value decreases, since HMM tends to correct the most improbables outputs generated by MC-SVM. We find confirmation to this assumption looking at
-Fig.~\ref{fig:smoothmulti} and Fig.~\ref{fig:smoothsingle}. In particular in Fig.~\ref{fig:smoothsingle} we can see how HMM removes the chord-labels that are not repeated costantly over time and therefore result less likely.
+We concluded that HMM don't always improve our result for every single song. It is able to do so only in average. However what HMM is able to do for each song is reduce the chords variation. We define chord variation as the number of times that a chord sequence varies within the same song. This value decreases, since HMM tends to correct the most improbable outputs generated by MC-SVM. We find confirmation to this assumption looking at Figs.~\ref{fig:smoothmulti},\ref{fig:smoothsingle}. In particular in Fig.~\ref{fig:smoothsingle} we can see how HMM removes the impulsive chord variations which tend to be quite unlikely.
 
 \begin{figure} [h!]
 	\centering
