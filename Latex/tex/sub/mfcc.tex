@@ -1,6 +1,24 @@
 \subsection{Features Extraction}
 \label{subsec:features}
-
+%
+\begin{figure*}[t]
+	\hfill
+	\subfigure[Example of pitch extraction]{
+		\includegraphics[width=0.3\linewidth]{img/PitchExample}
+		\label{fig:PitchExample}
+	}
+	\hfill
+	\subfigure[Example of CENS features]{
+		\includegraphics[width=0.3\linewidth]{img/CENSexample}
+		\label{fig:CENSexample}
+	}
+	\hfill
+	\vspace{-5mm}
+	\caption{Example of feature extraction from a track containing the same chord played by 8 different instrument. You can see in \subref{fig:PitchExample} the different harmonic content while in \subref{fig:CENSexample} the instruments are basically indistinguishable}
+	\label{fig:exampleChromaToolbox}
+	\vspace{-5mm}
+\end{figure*}
+%
 Feature extraction is performed using \textit{Chroma Toolbox} \cite{ChromaToolbox}, a MATLAB implementation of many different audio/musical features under GPL license.\\
 %
 At first, the audio signal is decomposed into 88 frequency bands centered in the frequencies corresponding to the pitches of notes A0 up to C8. A multirate filter bank using elliptic filters is used and finally \textit{Short-Time Mean-Square Power} (STMSP) is used to extract the useful information. In order to ignore the different harmonic profiles given by different instruments, the energies referred to the same notes are pooled together resulting in 12-dimensional vectors.\\
@@ -11,19 +29,3 @@ The different features are then obtained operating in different ways on the extr
 	\item CENS (\textit{Chroma Energy Normalized Statistics}): in order to account for dynamics, timbre, articulation, execution of note groups, and temporal micro-deviations, smart logarithmic quantization, temporal smoothing, downsampling and normalizations are performed.
 	\item CRP (\textit{Chroma DCT-Reduced log Pitch}): they include logarithmic compression, smoothing and timbre invariance by using a DCT-based technique.
 \end{itemize}
-
-\begin{figure*}[t]
-	\hfill
-	\subfigure[Example of pitch extraction]{
-		\includegraphics[width=0.4\linewidth]{img/PitchExample}
-		\label{fig:PitchExample}
-	}
-	\hfill
-	\subfigure[Example of CENS features]{
-		\includegraphics[width=0.4\linewidth]{img/CENSexample}
-		\label{fig:CENSexample}
-		}
-	\hfill
-	\caption{Example of feature extraction from a track containing the same chord played by 8 different instrument. You can see in \subref{fig:PitchExample} the different harmonic content while in \subref{fig:CENSexample} the instruments are basically indistinguishable}
-	\label{fig:exampleChromaToolbox}
-\end{figure*}
