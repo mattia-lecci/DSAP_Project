@@ -14,7 +14,7 @@ function gaussianMixture = trainGaussianMixture(chord, features)
     
     chordlist = {'A';'Am';'Bm';'C';'D';'Dm';'E';'Em';'F';'G'};
     
-    %I create a new gaussina for each new note and I save it the cell array
+    %I create a new gaussian for each new note and I save it the cell array
     %previously created
         
     for i=1:(length(chordlist))

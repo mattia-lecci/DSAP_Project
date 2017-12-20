@@ -99,7 +99,7 @@ errorSvmCrp = computeError(trueTestLabels,predSvmCrp);
 disp 'Error evaluation with gaussian mixture:'
 fprintf('Gaussian with CENS features error: %.2f%%\n',errorGaussCens*100);
 fprintf('Gaussian with CLP features error: %.2f%%\n',errorGaussClp*100);
-fprintf('Gaussina with CRP features error: %.2f%%\n',errorGaussCrp*100);
+fprintf('Gaussian with CRP features error: %.2f%%\n',errorGaussCrp*100);
 
 fprintf('Error evaluation with SVM (%s):\n',kernel')
 fprintf('SVM with CENS features error: %.2f%%\n',errorSvmCens*100);
