@@ -1,8 +1,8 @@
 \section{Conclusions}
 \label{sec:conclusions}
 
-After seeing the results in Sec.~\ref{sec:results}, it should be clear that the more advanced techniques described in Sec.~\ref{sec:techniques} improve the results very significantly over the oldest and simplest ones. In particular, CENS features are able to perform really well with all classifiers but the most advanced ones (SVM with non-linear kernels) clearly outperform all the others.
-
-Using this information, we tried to predict chords in full songs having, of course, poorer results, due to the increased complexity of the problem. The HMM-based approach, again, was able to improve performance over the trivial \textit{per-frame} one. 
-
+After seeing the results in Sec.~\ref{sec:results}, it should be clear that the more advanced techniques described in Sec.~\ref{sec:techniques} improve the results very significantly over the oldest and simplest ones. In particular, CENS features are able to perform really well with all classifiers but the most advanced ones (SVM with non-linear kernels) clearly outperform all the others.\\
+%
+Using this information, we tried to predict chords in full songs having, of course, poorer results, due to the increased complexity of the problem. The HMM-based approach, again, was able to improve performance over the trivial \textit{per-frame} one. \\
+%
 Future works might try to use different type of features and classifiers for the general chord recognition problem, as well as exploring the hyperparameters given by the ECOC for the multiclass SVM classifier. When dealing with entire songs, instead, it might be useful to either extract or subtract specific instruments (e.g. drums) and voice, since we believe they are the main cause of the high error rates obtained.
